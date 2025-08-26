@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class CantinaController {
@@ -57,7 +60,7 @@ public class CantinaController {
 
     @PostMapping("/cantina/login_cantina")
     public String loginCantina(@Valid @ModelAttribute CantinaDTO cantinaDTO, BindingResult bindingResult,
-            Model model) {
+            Model model, HttpServletResponse response) {
 
         System.out.println("-> Iniciando login de cantina");
 
@@ -71,6 +74,13 @@ public class CantinaController {
             Cantina cantina = cantinaService.login(cantinaDTO);
             System.out.println(cantina);
 
+            // Gerar token e salvar no cookie
+            String token = cantinaService.generateToken(cantina);
+            Cookie cookie = new Cookie("cantina_token", token);
+            cookie.setMaxAge(5 * 60); // 5 minutos
+            cookie.setPath("/");
+            response.addCookie(cookie);
+
             System.out.println("-> Login de Cantina realizado com sucesso");
             return "redirect:/cantina/home_cantina";
         } catch (Exception e) {
@@ -82,8 +92,24 @@ public class CantinaController {
     }
 
     @GetMapping("/cantina/home_cantina")
-    public String homeCantina() {
+    public String homeCantina(HttpServletRequest request) {
         System.out.println("-> Acessando home da Cantina");
+
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("cantina_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null || !cantinaService.isTokenValid(token)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
+
         return "/cantina/home_cantina";
     }
 
