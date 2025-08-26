@@ -15,6 +15,12 @@
     >
       <div class="w-100" style="max-width: 420px">
         <h1 class="mb-4 text-center fw-bold">Cadastro de Cantina</h1>
+        <div th:if="${errors}" class="alert alert-danger">
+          <strong>Dados inválidos:</strong>
+          <ul>
+            <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
+          </ul>
+        </div>
         <form action="/cantina/cadastro_cantina" method="post">
           <div class="mb-3">
             <label for="login" class="form-label">Login</label>
@@ -24,6 +30,7 @@
               id="login"
               name="login"
               required
+              minlength="5"
             />
           </div>
           <div class="mb-3">
@@ -34,6 +41,7 @@
               id="senha"
               name="senha"
               required
+              minlength="5"
             />
           </div>
           <div class="mb-3">
@@ -44,6 +52,7 @@
               id="nome"
               name="nome"
               required
+              minlength="5"
             />
           </div>
           <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
