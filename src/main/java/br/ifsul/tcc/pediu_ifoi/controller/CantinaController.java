@@ -1,10 +1,13 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
 
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
@@ -22,8 +25,15 @@ public class CantinaController {
     }
 
     @PostMapping(value = "/cantina/cadastro_cantina", consumes = "application/x-www-form-urlencoded")
-    public String cadastrarCantina(@ModelAttribute Cantina cantina) {
+    public String cadastrarCantina(@Valid @ModelAttribute Cantina cantina, BindingResult bindingResult,
+            Model model) {
         System.out.println("-> Iniciando cadastro de cantina");
+
+        if (bindingResult.hasErrors()) {
+            System.err.println("-> Dados inválidos no cadastro.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/cantina/cadastro_cantina";
+        }
 
         try {
             cantina = cantinaService.salvarCantina(cantina);
