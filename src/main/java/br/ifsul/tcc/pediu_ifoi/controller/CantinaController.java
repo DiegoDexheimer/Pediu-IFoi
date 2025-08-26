@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 
+import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
 
-@Controller()
+@Controller
 public class CantinaController {
 
     @Autowired
@@ -46,6 +47,44 @@ public class CantinaController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/cantina/login_cantina")
+    public String loginCantina() {
+        System.out.println("-> Acessando tela de login de Cantina");
+        return "/cantina/login_cantina";
+    }
+
+    @PostMapping("/cantina/login_cantina")
+    public String loginCantina(@Valid @ModelAttribute CantinaDTO cantinaDTO, BindingResult bindingResult,
+            Model model) {
+
+        System.out.println("-> Iniciando login de cantina");
+
+        if (bindingResult.hasErrors()) {
+            System.err.println("-> Dados inválidos no login.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/cantina/login_cantina";
+        }
+
+        try {
+            Cantina cantina = cantinaService.login(cantinaDTO);
+            System.out.println(cantina);
+
+            System.out.println("-> Login de Cantina realizado com sucesso");
+            return "redirect:/cantina/home_cantina";
+        } catch (Exception e) {
+            System.out.println("-> Erro ao realizar login de Cantina: " + e.getMessage());
+            model.addAttribute("loginError", "Login ou senha inválidos");
+        }
+
+        return "/cantina/login_cantina";
+    }
+
+    @GetMapping("/cantina/home_cantina")
+    public String homeCantina() {
+        System.out.println("-> Acessando home da Cantina");
+        return "/cantina/home_cantina";
     }
 
 }

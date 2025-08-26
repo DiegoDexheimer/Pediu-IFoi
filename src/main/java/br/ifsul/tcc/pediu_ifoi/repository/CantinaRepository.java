@@ -8,4 +8,6 @@ import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
 @Repository
 public interface CantinaRepository extends JpaRepository<Cantina, Long> {
 
+    Cantina findByLogin(String login);
+
 }
