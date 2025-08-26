@@ -12,8 +12,8 @@ public class CantinaService {
     @Autowired
     private CantinaRepository cantinaRepository;
 
-    public void salvarCantina(Cantina cantina) {
-        cantinaRepository.save(cantina);
+    public Cantina salvarCantina(Cantina cantina) {
+        return cantinaRepository.save(cantina);
     }
 
 }
