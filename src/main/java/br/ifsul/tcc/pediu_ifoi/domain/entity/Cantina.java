@@ -4,9 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Data;
 
 @Entity
-public class Cantina extends Usuario{
+@Data
+public class Cantina{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
