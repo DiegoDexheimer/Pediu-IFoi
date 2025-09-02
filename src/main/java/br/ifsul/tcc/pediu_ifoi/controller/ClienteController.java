@@ -45,8 +45,8 @@ public class ClienteController {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
             throw new RuntimeException("Erro ao cadastrar cliente");
         }
-
-        return "redirect:/";
+        //adicionar confirmação de criação bem sucedida e um delay para redirecionar para login
+        return "redirect:/cliente/login_cliente";
     }
 
     @GetMapping("/cliente/login_cliente")
@@ -82,9 +82,9 @@ public class ClienteController {
 
         } catch (Exception e) {
             System.out.println("Erro ao logar cliente: " + e.getMessage());
-            throw new RuntimeException("Erro ao logar cliente");
+            model.addAttribute("loginError", "Login ou senha inválidos");
+            return "cliente/login_cliente";
         }
-        
     }
 
 }

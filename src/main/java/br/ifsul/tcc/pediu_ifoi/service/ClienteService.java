@@ -20,6 +20,18 @@ public class ClienteService {
     private final static long TOKEN_VALIDITY_MS = 5 * 60 * 1000;
 
     public Cliente saveCliente(Cliente cliente) {
+
+        Cliente existentePorLogin = clienteRepository.findByLogin(cliente.getLogin());
+        if (existentePorLogin != null) {
+            throw new RuntimeException("Já existe um cliente com este login.");
+        }
+        
+        if (cliente.getTelefone() != null && !cliente.getTelefone().isEmpty()) {
+            Cliente existentePorTelefone = clienteRepository.findByTelefone(cliente.getTelefone());
+            if (existentePorTelefone != null) {
+                throw new RuntimeException("Já existe um cliente com este telefone.");
+            }
+        }
         return clienteRepository.save(cliente);
     }
 
