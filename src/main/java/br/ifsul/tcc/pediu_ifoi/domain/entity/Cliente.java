@@ -30,7 +30,7 @@ public class Cliente{
     private String senha;
 
     //(XX) X-XXXX-XXXX
-    @Column(name = "telefone", unique = true, nullable = true, length = 15)
+    @Column(name = "telefone", unique = true, nullable = true, length = 12)
     private String telefone;
 
 }

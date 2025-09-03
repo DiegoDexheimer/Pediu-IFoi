@@ -22,7 +22,7 @@
 						<li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
 					</ul>
 				</div>
-				<form action="/cliente/cadastro_cliente" method="post">
+				<form action="/cliente/cadastro_cliente" method="post" id="cadastroForm" novalidate>
 					<div class="mb-3">
 						<label for="login" class="form-label">Login</label>
 						<input
@@ -60,18 +60,60 @@
 					</div>
 					<div class="mb-3">
 						<label for="telefone" class="form-label">Telefone</label>
-						<input
-							type="text"
-							class="form-control"
-							id="telefone"
-							name="telefone"
-							placeholder="(XX)X-XXXX-XXXX"
-							maxlength="15"
-							th:value="${cliente?.telefone}"
-						/>
+						<div class="input-group">
+							<input
+								type="text"
+								class="form-control"
+								id="telefone"
+								name="telefone"
+								placeholder="(XX)XXXXX-XXXX"
+								maxlength="12"
+								th:value="${cliente?.telefone}"
+								pattern="[0-9()\- ]"
+								title="Digite exatamente 12 dígitos, apenas números e caracteres válidos do formato."
+								oninput="this.value = this.value.replace(/[^0-9()\- ]/g, '')"
+								required
+							/>
+						</div>
+						<div id="telefoneHelp" class="form-text text-danger d-none">O telefone deve conter exatamente 12 dígitos numéricos.</div>
 					</div>
-					<button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+					<button type="submit" class="btn btn-primary w-100" id="btnCadastrar" disabled>
+						<i class="bi bi-person-plus"></i> Cadastrar
+					</button>
 				</form>
+				<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
+				<script>
+				const form = document.getElementById('cadastroForm');
+				const btnCadastrar = document.getElementById('btnCadastrar');
+				const telefoneInput = document.getElementById('telefone');
+				const telefoneHelp = document.getElementById('telefoneHelp');
+
+				function validarCampos() {
+					const login = document.getElementById('login').value.trim();
+					const senha = document.getElementById('senha').value.trim();
+					const nome = document.getElementById('nome').value.trim();
+					const telefone = telefoneInput.value.trim();
+					const telefoneNumeros = telefone.replace(/[^0-9]/g, '');
+
+					const loginValido = login.length >= 5;
+					const senhaValida = senha.length >= 5;
+					const nomeValido = nome.length >= 3;
+					const telefoneValido = telefoneNumeros.length === 12;
+
+					if (!telefoneValido && telefone.length > 0) {
+						telefoneInput.classList.add('is-invalid');
+						telefoneHelp.classList.remove('d-none');
+					} else {
+						telefoneInput.classList.remove('is-invalid');
+						telefoneHelp.classList.add('d-none');
+					}
+
+					btnCadastrar.disabled = !(loginValido && senhaValida && nomeValido && telefoneValido);
+				}
+
+				form.addEventListener('input', validarCampos);
+				window.addEventListener('DOMContentLoaded', validarCampos);
+				</script>
 			</div>
 		</div>
 	</body>
