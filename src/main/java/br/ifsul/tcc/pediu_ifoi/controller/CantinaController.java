@@ -10,17 +10,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
+import br.ifsul.tcc.pediu_ifoi.domain.dto.ProdutoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
+import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class CantinaController {
 
     @Autowired
     private CantinaService cantinaService;
+
+    @Autowired
+    private ProdutoService produtoService;
 
     @GetMapping("/cantina/cadastro_cantina")
     public String cadastrarCantina() {
@@ -113,4 +120,39 @@ public class CantinaController {
         return "/cantina/home_cantina";
     }
 
+    @GetMapping("/cantina/cadastrar_produto")
+    public String cadastrarProduto() {
+        System.out.println("-> Acessando tela de cadastro de produto");
+        return "/cantina/cadastrar_produto";
+    }
+
+    @PostMapping("/cantina/cadastrar_produto")
+    public String cadastrarProduto(@Valid @ModelAttribute ProdutoDTO produtoDTO, BindingResult bindingResult,
+            Model model) {
+
+        System.out.println("-> Iniciando cadastro de produto");
+
+        if (bindingResult.hasErrors()) {
+            System.err.println("-> Erros de validação encontrados.");
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "/cantina/cadastrar_produto";
+        }
+
+        try {
+            System.out.println(produtoDTO);
+            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true);
+            produto = produtoService.cadastrarProduto(produto);
+            return "redirect:/cantina/listar_produtos";
+
+        } catch (Exception e) {
+            System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
+            throw new RuntimeException("Erro ao cadastrar Cantina");
+        }
+    }
+
+    @GetMapping("/cantina/listar_produtos")
+    public String listarProdutos() {
+        System.out.println("-> Acessando tela de listagem de produtos");
+        return "/cantina/listar_produtos";
+    }
 }
