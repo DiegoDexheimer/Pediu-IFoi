@@ -21,7 +21,6 @@ import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class CantinaController {
