@@ -11,7 +11,7 @@ body {
   left: 0;
   height: 100vh;
   width: 220px;
-  background-color: #343a40;
+  background-color: #0E0E76;
   padding-top: 60px;
   color: #fff;
 }
@@ -19,14 +19,14 @@ body {
   color: #fff;
   margin-bottom: 8px;
 }
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover {
-  background-color: #495057;
-  color: #ffc107;
-}
 .content-area {
   margin-left: 240px;
   padding: 40px 30px;
+}
+a {
+  all: unset;
+  display: revert;
+  cursor: pointer;
 }
 @media (max-width: 768px) {
   .sidebar {
