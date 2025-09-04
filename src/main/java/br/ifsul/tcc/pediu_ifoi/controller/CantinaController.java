@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 
@@ -23,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/cantina")
 public class CantinaController {
 
     @Autowired
@@ -31,13 +33,13 @@ public class CantinaController {
     @Autowired
     private ProdutoService produtoService;
 
-    @GetMapping("/cantina/cadastro_cantina")
+    @GetMapping("/cadastro_cantina")
     public String cadastrarCantina() {
         System.out.println("-> Cadastro de Cantina acessado");
         return "/cantina/cadastro_cantina";
     }
 
-    @PostMapping(value = "/cantina/cadastro_cantina", consumes = "application/x-www-form-urlencoded")
+    @PostMapping(value = "/cadastro_cantina", consumes = "application/x-www-form-urlencoded")
     public String cadastrarCantina(@Valid @ModelAttribute Cantina cantina, BindingResult bindingResult,
             Model model) {
         System.out.println("-> Iniciando cadastro de cantina");
@@ -61,13 +63,13 @@ public class CantinaController {
         return "redirect:/";
     }
 
-    @GetMapping("/cantina/login_cantina")
+    @GetMapping("/login_cantina")
     public String loginCantina() {
         System.out.println("-> Acessando tela de login de Cantina");
         return "/cantina/login_cantina";
     }
 
-    @PostMapping("/cantina/login_cantina")
+    @PostMapping("/login_cantina")
     public String loginCantina(@Valid @ModelAttribute CantinaDTO cantinaDTO, BindingResult bindingResult,
             Model model, HttpServletResponse response) {
 
@@ -100,7 +102,7 @@ public class CantinaController {
         return "/cantina/login_cantina";
     }
 
-    @GetMapping("/cantina/home_cantina")
+    @GetMapping("/home_cantina")
     public String homeCantina(HttpServletRequest request) {
         System.out.println("-> Acessando home da Cantina");
 
@@ -122,13 +124,13 @@ public class CantinaController {
         return "/cantina/home_cantina";
     }
 
-    @GetMapping("/cantina/cadastrar_produto")
+    @GetMapping("/cadastrar_produto")
     public String cadastrarProduto() {
         System.out.println("-> Acessando tela de cadastro de produto");
         return "/cantina/cadastrar_produto";
     }
 
-    @PostMapping("/cantina/cadastrar_produto")
+    @PostMapping("/cadastrar_produto")
     public String cadastrarProduto(@Valid @ModelAttribute ProdutoDTO produtoDTO, BindingResult bindingResult,
             Model model) {
 
@@ -152,7 +154,7 @@ public class CantinaController {
         }
     }
 
-    @GetMapping("/cantina/listar_produtos")
+    @GetMapping("/listar_produtos")
     public String listarProdutos(Model model) {
         System.out.println("-> Acessando tela de listagem de produtos");
 
