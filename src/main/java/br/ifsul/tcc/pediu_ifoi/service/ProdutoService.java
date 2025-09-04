@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.ifsul.tcc.pediu_ifoi.domain.dto.ProdutoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.repository.ProdutoRepository;
 
@@ -20,5 +21,17 @@ public class ProdutoService {
 
     public List<Produto> listarProdutos() {
         return produtoRepository.findAll();
+    }
+
+    public Produto buscarProdutoPorId(Long id) {
+        return produtoRepository.findById(id).orElse(null);
+    }
+
+    public void atualizarProduto(Long id, ProdutoDTO produtoDTO) {
+        Produto produto = buscarProdutoPorId(id);
+        produto.setNome(produtoDTO.nome());
+        produto.setPreco(produtoDTO.preco());
+
+        produtoRepository.save(produto);
     }
 }
