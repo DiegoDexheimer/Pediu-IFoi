@@ -1,0 +1,42 @@
+body {
+  background-color: #f8f9fa;
+}
+.main-container {
+  margin-top: 40px;
+  max-width: 900px;
+}
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 220px;
+  background-color: #343a40;
+  padding-top: 60px;
+  color: #fff;
+}
+.sidebar .nav-link {
+  color: #fff;
+  margin-bottom: 8px;
+}
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: #495057;
+  color: #ffc107;
+}
+.content-area {
+  margin-left: 240px;
+  padding: 40px 30px;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding-top: 0;
+  }
+  .content-area {
+    margin-left: 0;
+    padding: 20px 10px;
+  }
+}

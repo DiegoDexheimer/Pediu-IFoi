@@ -1,6 +1,9 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -151,8 +154,18 @@ public class CantinaController {
     }
 
     @GetMapping("/cantina/listar_produtos")
-    public String listarProdutos() {
+    public String listarProdutos(Model model) {
         System.out.println("-> Acessando tela de listagem de produtos");
-        return "/cantina/listar_produtos";
+
+        try {
+            System.out.println("-> Buscando produtos");
+            List<Produto> produtos = produtoService.listarProdutos();
+            System.out.println("-> Produtos encontrados: " + produtos.size());
+            model.addAttribute("produtos", produtos);
+            return "/cantina/listar_produtos";
+        } catch (Exception e) {
+            System.out.println("-> Erro ao listar produtos: " + e.getMessage());
+            throw new RuntimeException("Erro ao listar produtos");
+        }
     }
 }
