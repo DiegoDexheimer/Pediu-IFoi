@@ -102,10 +102,7 @@ public class CantinaController {
         return "/cantina/login_cantina";
     }
 
-    @GetMapping("/home_cantina")
-    public String homeCantina(HttpServletRequest request) {
-        System.out.println("-> Acessando home da Cantina");
-
+    private boolean isAuthenticated(HttpServletRequest request) {
         String token = null;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
@@ -115,26 +112,38 @@ public class CantinaController {
                 }
             }
         }
+        return token != null && cantinaService.isTokenValid(token);
+    }
 
-        if (token == null || !cantinaService.isTokenValid(token)) {
+    @GetMapping("/home_cantina")
+    public String homeCantina(HttpServletRequest request) {
+        System.out.println("-> Acessando home da Cantina");
+        if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cantina/login_cantina";
         }
-
         return "/cantina/home_cantina";
     }
 
     @GetMapping("/cadastrar_produto")
-    public String cadastrarProduto() {
+    public String cadastrarProduto(HttpServletRequest request) {
         System.out.println("-> Acessando tela de cadastro de produto");
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
         return "/cantina/cadastrar_produto";
     }
 
     @PostMapping("/cadastrar_produto")
     public String cadastrarProduto(@Valid @ModelAttribute ProdutoDTO produtoDTO, BindingResult bindingResult,
-            Model model) {
+            Model model, HttpServletRequest request) {
 
         System.out.println("-> Iniciando cadastro de produto");
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
 
         if (bindingResult.hasErrors()) {
             System.err.println("-> Erros de validação encontrados.");
@@ -155,8 +164,12 @@ public class CantinaController {
     }
 
     @GetMapping("/listar_produtos")
-    public String listarProdutos(Model model) {
+    public String listarProdutos(Model model, HttpServletRequest request) {
         System.out.println("-> Acessando tela de listagem de produtos");
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
 
         try {
             System.out.println("-> Buscando produtos");
