@@ -46,7 +46,6 @@ public class CantinaService {
             tokenStore.remove(token);
             return false;
         }
-        System.out.println("-> Token válido: " + token);
         return true;
     }
 
