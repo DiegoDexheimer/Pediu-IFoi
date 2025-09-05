@@ -24,6 +24,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
@@ -226,5 +227,24 @@ public class CantinaController {
         model.addAttribute("produtos", produtos);
 
         return "/cantina/listar_produtos";
+    }
+
+    @PostMapping("/remover_produto/{id}")
+    public String removerProduto(@PathVariable Long id, HttpServletRequest request) {
+        System.out.println("-> Iniciando remoção de produto " + id);
+
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
+
+        try {
+            produtoService.removerProduto(id);
+            System.out.println("-> Produto removido com sucesso");
+            return "redirect:/cantina/listar_produtos";
+        } catch (Exception e) {
+            System.out.println("-> Erro ao remover produto: " + e.getMessage());
+            throw new RuntimeException("Erro ao remover produto");
+        }
     }
 }

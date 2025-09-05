@@ -34,4 +34,8 @@ public class ProdutoService {
 
         produtoRepository.save(produto);
     }
+
+    public void removerProduto(Long id) {
+        produtoRepository.deleteById(id);
+    }
 }
