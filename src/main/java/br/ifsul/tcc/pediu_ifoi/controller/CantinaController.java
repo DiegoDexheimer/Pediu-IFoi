@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
@@ -22,6 +23,9 @@ import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
 @RequestMapping("/cantina")
@@ -180,6 +184,67 @@ public class CantinaController {
         } catch (Exception e) {
             System.out.println("-> Erro ao listar produtos: " + e.getMessage());
             throw new RuntimeException("Erro ao listar produtos");
+        }
+    }
+
+    @PostMapping("/atualizar_produto/{id}")
+    public String atualizarProduto(@PathVariable Long id,
+            @ModelAttribute ProdutoDTO produtoDTO,
+            Model model,
+            HttpServletRequest request) {
+        System.out.println("-> Iniciando atualização de produto " + id);
+
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
+
+        try {
+            produtoService.atualizarProduto(id, produtoDTO);
+            System.out.println("-> Produto atualizado com sucesso");
+
+            return "redirect:/cantina/listar_produtos";
+        } catch (Exception e) {
+            System.out.println("-> Erro ao atualizar produto: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar produto");
+        }
+    }
+
+    @ExceptionHandler({ MethodArgumentNotValidException.class, org.springframework.beans.TypeMismatchException.class })
+    public String handleValidationException(Exception ex, Model model, HttpServletRequest request) {
+        String errorMsg = "Erro ao atualizar produto: ";
+        if (ex instanceof MethodArgumentNotValidException) {
+            errorMsg += "Verifique se o nome é texto e o preço é numérico.";
+        } else if (ex instanceof org.springframework.beans.TypeMismatchException) {
+            errorMsg += "O campo preço deve ser numérico e o nome deve ser texto.";
+        } else {
+            errorMsg += "Dados inválidos.";
+        }
+        model.addAttribute("alertError", errorMsg);
+
+        // Recarrega a lista de produtos para mostrar na tela
+        List<Produto> produtos = produtoService.listarProdutos();
+        model.addAttribute("produtos", produtos);
+
+        return "/cantina/listar_produtos";
+    }
+
+    @PostMapping("/remover_produto/{id}")
+    public String removerProduto(@PathVariable Long id, HttpServletRequest request) {
+        System.out.println("-> Iniciando remoção de produto " + id);
+
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cantina/login_cantina";
+        }
+
+        try {
+            produtoService.removerProduto(id);
+            System.out.println("-> Produto removido com sucesso");
+            return "redirect:/cantina/listar_produtos";
+        } catch (Exception e) {
+            System.out.println("-> Erro ao remover produto: " + e.getMessage());
+            throw new RuntimeException("Erro ao remover produto");
         }
     }
 }
