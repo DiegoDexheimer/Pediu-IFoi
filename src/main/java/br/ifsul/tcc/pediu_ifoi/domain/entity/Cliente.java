@@ -29,7 +29,6 @@ public class Cliente{
     @Size(min = 5, max = 100, message = "A senha deve ter entre 6 e 100 caracteres")
     private String senha;
 
-    //(XX) X-XXXX-XXXX
     @Column(name = "telefone", unique = true, nullable = true, length = 12)
     private String telefone;
 
