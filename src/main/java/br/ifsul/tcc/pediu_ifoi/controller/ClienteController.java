@@ -1,33 +1,54 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
+import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
+import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
-    @GetMapping("/cliente/cadastro_cliente")
+    @Autowired
+    private ProdutoService produtoService;
+
+    private boolean isAuthenticated(HttpServletRequest request) {
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return token != null && clienteService.isTokenValid(token);
+    }
+
+    @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
         System.out.println("-> Cadastro de Cliente acessado");
         return "cliente/cadastro_cliente";
     }
 
-    @PostMapping(value = "/cliente/cadastro_cliente", consumes = "application/x-www-form-urlencoded")
+    @PostMapping(value = "/cadastro_cliente", consumes = "application/x-www-form-urlencoded")
     public String cadastrarCliente(@Valid @ModelAttribute Cliente cliente, BindingResult bindingResult, Model model) {
         System.out.println("-> Iniciando cadastro de cliente");
 
@@ -45,17 +66,16 @@ public class ClienteController {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
             throw new RuntimeException("Erro ao cadastrar cliente");
         }
-        //adicionar confirmação de criação bem sucedida e um delay para redirecionar para login
         return "redirect:/cliente/login_cliente";
     }
 
-    @GetMapping("/cliente/login_cliente")
+    @GetMapping("/login_cliente")
     public String loginCliente() {
         System.out.println("-> Acessando tela de login de cliente");
         return "cliente/login_cliente";
     }
 
-    @PostMapping("/cliente/login_cliente")
+    @PostMapping("/login_cliente")
     public String loginCliente(@Valid @ModelAttribute ClienteLoginDTO clienteLoginDTO, BindingResult bindingResult,
             Model model, HttpServletResponse response) {
 
@@ -73,7 +93,7 @@ public class ClienteController {
 
             String token = clienteService.generateToken(cliente);
             Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(60 * 5);
+            cookie.setMaxAge(5 * 60); // 5 minutos
             cookie.setPath("/");
             response.addCookie(cookie);
 
@@ -87,4 +107,15 @@ public class ClienteController {
         }
     }
 
+    @GetMapping("/home_cliente")
+    public String homeCliente(Model model, HttpServletRequest request) {
+        System.out.println("-> Acessando home do Cliente");
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cliente/login_cliente";
+        }
+        List<Produto> produtos = produtoService.listarProdutos();
+        model.addAttribute("produtos", produtos);
+        return "cliente/home_cliente";
+    }
 }

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pediu-IFoi | Home do Cliente</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <style>
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            background: #f7f7f7;
+        }
+        .header {
+            background: #218838;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 16px 32px;
+        }
+        .header img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-right: 16px;
+        }
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-actions a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+        }
+        .info-bar {
+            background: #fff;
+            padding: 8px 32px;
+            font-size: 0.95rem;
+            color: #333;
+            display: flex;
+            gap: 24px;
+        }
+        .alert {
+            background: #ffe5e5;
+            color: #c0392b;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 0.95rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 32px auto 80px auto;
+            padding: 0 16px;
+        }
+        .category {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 32px 0 16px 0;
+        }
+        .products {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            gap: 16px;
+        }
+        .product-card img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .product-info {
+            flex: 1;
+        }
+        .product-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .product-price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #218838;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60px;
+            z-index: 100;
+        }
+        .nav-item {
+            text-align: center;
+            color: #218838;
+            font-size: 0.95rem;
+            text-decoration: none;
+        }
+        .nav-item svg {
+            display: block;
+            margin: 0 auto 4px auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="/static/favicon.ico" alt="Logo Pediu-IFoi">
+        <span class="header-title">Pediu-IFoi</span>
+        <div class="header-actions">
+            <a href="#"><span title="Buscar"><svg width="22" height="22" fill="currentColor"><circle cx="10" cy="10" r="8" stroke="#fff" stroke-width="2" fill="none"/><line x1="16" y1="16" x2="21" y2="21" stroke="#fff" stroke-width="2"/></svg></span></a>
+            <a href="#"><span title="Compartilhar"><svg width="22" height="22" fill="currentColor"><circle cx="11" cy="11" r="8" stroke="#fff" stroke-width="2" fill="none"/><circle cx="11" cy="7" r="2" fill="#fff"/><circle cx="7" cy="15" r="2" fill="#fff"/><circle cx="15" cy="15" r="2" fill="#fff"/><line x1="11" y1="9" x2="7" y2="15" stroke="#fff" stroke-width="2"/><line x1="11" y1="9" x2="15" y2="15" stroke="#fff" stroke-width="2"/></svg></span></a>
+            <a href="#">Perfil</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Agrupa produtos por categoria (compatível Thymeleaf) -->
+        <div th:each="categoria : ${categorias}">
+            <div class="category" th:text="${categoria}">Categoria</div>
+            <div class="products">
+                <div class="product-card" th:each="produto : ${produtos}" th:if="${produto.categoria} == ${categoria}">
+                    <img th:src="${produto.imagemUrl != null ? produto.imagemUrl : '/static/default_produto.png'}" alt="Imagem do produto">
+                    <div class="product-info">
+                        <div class="product-title" th:text="${produto.nome}">Nome do produto</div>
+                        <div class="product-price" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 2, 'COMMA', 'POINT')}">Preço</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2"><path d="M3 12L12 3l9 9"/><path d="M4 10v10h16V10"/></svg>
+            Início
+        </a>
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8 10h8M8 14h8"/></svg>
+            Pedidos
+        </a>
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>
+            Carrinho
+        </a>
+    </div>
+</body>
+</html>
