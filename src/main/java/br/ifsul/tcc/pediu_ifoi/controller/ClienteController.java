@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
+
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
@@ -16,25 +21,26 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
+@RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
-    @GetMapping("/cliente/cadastro_cliente")
+    @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
         System.out.println("-> Cadastro de Cliente acessado");
-        return "cliente/cadastro_cliente";
+        return "/cliente/cadastro_cliente";
     }
 
-    @PostMapping(value = "/cliente/cadastro_cliente", consumes = "application/x-www-form-urlencoded")
+    @PostMapping(value = "/cadastro_cliente", consumes = "application/x-www-form-urlencoded")
     public String cadastrarCliente(@Valid @ModelAttribute Cliente cliente, BindingResult bindingResult, Model model) {
         System.out.println("-> Iniciando cadastro de cliente");
 
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no cadastro");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "cliente/cadastro_cliente";
+            return "/cliente/cadastro_cliente";
         }
 
         try {
@@ -49,13 +55,13 @@ public class ClienteController {
         return "redirect:/cliente/login_cliente";
     }
 
-    @GetMapping("/cliente/login_cliente")
+    @GetMapping("/login_cliente")
     public String loginCliente() {
         System.out.println("-> Acessando tela de login de cliente");
-        return "cliente/login_cliente";
+        return "/cliente/login_cliente";
     }
 
-    @PostMapping("/cliente/login_cliente")
+    @PostMapping("/login_cliente")
     public String loginCliente(@Valid @ModelAttribute ClienteLoginDTO clienteLoginDTO, BindingResult bindingResult,
             Model model, HttpServletResponse response) {
 
@@ -64,7 +70,7 @@ public class ClienteController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no login");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "cliente/login_cliente";
+            return "/cliente/login_cliente";
         }
 
         try {
@@ -72,8 +78,8 @@ public class ClienteController {
             System.out.println(cliente);
 
             String token = clienteService.generateToken(cliente);
-            Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(60 * 5);
+            Cookie cookie = new Cookie("cliente_token", token);
+            cookie.setMaxAge(5 * 60); // 5 minutos
             cookie.setPath("/");
             response.addCookie(cookie);
 
@@ -83,8 +89,45 @@ public class ClienteController {
         } catch (Exception e) {
             System.out.println("Erro ao logar cliente: " + e.getMessage());
             model.addAttribute("loginError", "Login ou senha inválidos");
-            return "cliente/login_cliente";
+            return "/cliente/login_cliente";
         }
+    }
+
+    private boolean isAuthenticated(HttpServletRequest request) {
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("cliente_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return token != null && clienteService.isTokenValid(token);
+    }
+
+    @GetMapping("/home_cliente")
+    public String homeCliente(HttpServletRequest request) {
+        System.out.println("-> Acessando home do Cliente");
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cliente/login_cliente";
+        }
+        return "/cliente/home_cliente";
+    }
+
+    @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class, org.springframework.beans.TypeMismatchException.class })
+    public String handleValidationException(Exception ex, Model model) {
+        String errorMsg = "Erro ao processar requisição: ";
+        if (ex instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
+            errorMsg += "Verifique se os dados estão corretos.";
+        } else if (ex instanceof org.springframework.beans.TypeMismatchException) {
+            errorMsg += "O campo está com tipo inválido.";
+        } else {
+            errorMsg += "Dados inválidos.";
+        }
+        model.addAttribute("alertError", errorMsg);
+        return "/cliente/login_cliente";
     }
 
 }
