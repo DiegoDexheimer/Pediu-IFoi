@@ -17,9 +17,7 @@ public class Carrinho {
                 return;
             }
         }
-        ItemCarrinho novoItem = new ItemCarrinho();
-        novoItem.setProduto(produto);
-        novoItem.setQuantidade(quantidade);
+        ItemCarrinho novoItem = new ItemCarrinho(produto, quantidade);
         itens.add(novoItem);
 
     }
