@@ -20,16 +20,16 @@ public class ClienteMockInitializer implements CommandLineRunner {
     public void run(String... args) {
         if (clienteRepository.count() == 0) {
             Cliente cliente1 = new Cliente();
-            cliente1.setNome("João da Silva");
-            cliente1.setLogin("joaosilva");
-            cliente1.setSenha("senha123");
+            cliente1.setNome("Diego");
+            cliente1.setLogin("diego");
+            cliente1.setSenha("senha");
             cliente1.setTelefone("549999999999");
             clienteRepository.save(cliente1);
 
             Cliente cliente2 = new Cliente();
-            cliente2.setNome("Maria Oliveira");
-            cliente2.setLogin("mariaoliveira");
-            cliente2.setSenha("senha456");
+            cliente2.setNome("Eduardo");
+            cliente2.setLogin("eduardo");
+            cliente2.setSenha("senha");
             cliente2.setTelefone("549888888888");
             clienteRepository.save(cliente2);
         }

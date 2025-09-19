@@ -6,6 +6,8 @@ import br.ifsul.tcc.pediu_ifoi.repository.ProdutoRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component
 public class ProdutosMockInitializer implements CommandLineRunner {
 
@@ -19,17 +21,16 @@ public class ProdutosMockInitializer implements CommandLineRunner {
     public void run(String... args) {
 
         if (produtoRepository.count() == 0) {
-            Produto produto1 = new Produto();
-            produto1.setNome("Produto 1");
-            produto1.setPreco(10.0);
-            produto1.setDisponivel(true);
-            produtoRepository.save(produto1);
+            Random random = new Random();
 
-            Produto produto2 = new Produto();
-            produto2.setNome("Produto 2");
-            produto2.setPreco(20.0);
-            produto2.setDisponivel(true);
-            produtoRepository.save(produto2);
+            for (int i = 0; i < 20; i++) {
+                Produto produto = new Produto();
+                produto.setNome("Produto " + i);
+                double preco = 5 + (20-5) * random.nextDouble();
+                produto.setPreco(Math.round(preco * 100.00) / 100.0);
+                produto.setDisponivel(true);
+                produtoRepository.save(produto);
+            }
         }
     }
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pediu-IFoi | Home do Cliente</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
+    <link rel="stylesheet" href="/css/cliente.css">
+</head>
+
+<body>
+    <div class="header">
+        <img src="/static/favicon.ico" alt="Logo Pediu-IFoi">
+        <span class="header-title">Pediu-IFoi</span>
+        <div class="header-actions">
+            <a href="#"><span title="Buscar"><svg width="22" height="22" fill="currentColor">
+                        <circle cx="10" cy="10" r="8" stroke="#fff" stroke-width="2" fill="none" />
+                        <line x1="16" y1="16" x2="21" y2="21" stroke="#fff" stroke-width="2" />
+                    </svg></span></a>
+            
+            <a href="#">Perfil</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Exibe todos os produtos disponíveis -->
+        <div class="category">Produtos disponíveis</div>
+        <div class="products">
+            <a th:each="produto : ${produtos}" th:href="@{'/cliente/produto/' + ${produto.id}}" style="text-decoration:none;color:inherit;">
+                <div class="product-card">
+                    <img th:src="'/static/default_produto.png'" alt="Imagem do produto">
+                    <div class="product-info">
+                        <div class="product-title" th:text="${produto.nome}">Nome do produto</div>
+                        <div class="product-price" th:text="'R$ ' + ${produto.preco}">Preço</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
+                <path d="M3 12L12 3l9 9" />
+                <path d="M4 10v10h16V10" />
+            </svg>
+            Início
+        </a>
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
+                <rect x="4" y="4" width="16" height="16" rx="4" />
+                <path d="M8 10h8M8 14h8" />
+            </svg>
+            Pedidos
+        </a>
+        <a href="#" class="nav-item">
+            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
+                <circle cx="12" cy="12" r="8" />
+                <path d="M8 12h8M12 8v8" />
+            </svg>
+            Carrinho
+        </a>
+    </div>
+</body>
+
+</html>

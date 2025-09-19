@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,9 @@ public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private br.ifsul.tcc.pediu_ifoi.service.ProdutoService produtoService;
 
     @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
@@ -107,12 +111,15 @@ public class ClienteController {
     }
 
     @GetMapping("/home_cliente")
-    public String homeCliente(HttpServletRequest request) {
+    public String homeCliente(HttpServletRequest request, Model model) {
         System.out.println("-> Acessando home do Cliente");
         if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cliente/login_cliente";
         }
+        // Busca todos os produtos disponíveis
+        java.util.List<br.ifsul.tcc.pediu_ifoi.domain.entity.Produto> produtos = produtoService.listarProdutos();
+        model.addAttribute("produtos", produtos);
         return "/cliente/home_cliente";
     }
 
@@ -128,6 +135,26 @@ public class ClienteController {
         }
         model.addAttribute("alertError", errorMsg);
         return "/cliente/login_cliente";
+    }
+
+        @GetMapping("/produto/{id}")
+    public String produtoDetalhe(@PathVariable Long id, Model model, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        var produto = produtoService.buscarProdutoPorId(id);
+        model.addAttribute("produto", produto);
+        return "cliente/produto_detalhe";
+    }
+
+    @PostMapping("/adicionar_carrinho")
+    public String adicionarAoCarrinho(@RequestParam Long produtoId, @RequestParam int quantidade, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        // TODO: Adicionar lógica para adicionar ao carrinho do cliente
+        // Exemplo: carrinhoService.adicionarProduto(produtoId, quantidade, clienteId);
+        return "redirect:/cliente/home_cliente";
     }
 
 }
