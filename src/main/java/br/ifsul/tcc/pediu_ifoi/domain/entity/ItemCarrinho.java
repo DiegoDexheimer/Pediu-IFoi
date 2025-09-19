@@ -1,6 +1,8 @@
 package br.ifsul.tcc.pediu_ifoi.domain.entity;
 
 import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
