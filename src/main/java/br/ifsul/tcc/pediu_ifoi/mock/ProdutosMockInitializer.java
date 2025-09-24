@@ -20,7 +20,7 @@ public class ProdutosMockInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        if (produtoRepository.count() == 0) {
+        if (produtoRepository.count() < 5) {
             Random random = new Random();
 
             for (int i = 0; i < 20; i++) {
