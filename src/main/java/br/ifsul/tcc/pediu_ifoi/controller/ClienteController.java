@@ -1,5 +1,7 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -118,7 +121,7 @@ public class ClienteController {
             return "redirect:/cliente/login_cliente";
         }
         // Busca todos os produtos disponíveis
-        java.util.List<br.ifsul.tcc.pediu_ifoi.domain.entity.Produto> produtos = produtoService.listarProdutos();
+        List<Produto> produtos = produtoService.listarProdutos();
         model.addAttribute("produtos", produtos);
         return "/cliente/home_cliente";
     }
