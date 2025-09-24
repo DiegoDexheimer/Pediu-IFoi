@@ -34,7 +34,7 @@ public class Pedido {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ItemPedido> itensPedido;
 
-    private float valorTotal;
+    private Double valorTotal;
 
     private Date dataPedido;
 

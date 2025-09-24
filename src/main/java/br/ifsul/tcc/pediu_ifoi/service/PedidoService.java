@@ -50,8 +50,8 @@ public class PedidoService {
         pedidoRepository.save(pedidoEntity);
     }
 
-    private float calcularValorTotal(List<ItemPedido> produtos) {
-        float total = 0;
+    private Double calcularValorTotal(List<ItemPedido> produtos) {
+        Double total = 0.0;
         for (ItemPedido item : produtos) {
             total += item.getProduto().getPreco() * item.getQuantidade();
             System.out.println("Produto: " + item.getProduto().getNome() + ", Quantidade: " + item.getQuantidade() + ", Subtotal: " + (item.getProduto().getPreco() * item.getQuantidade()));
@@ -70,5 +70,9 @@ public class PedidoService {
 
     public List<Pedido> listarPedidosFinalizados() {
         return pedidoRepository.findByStatusPedido(StatusPedido.FINALIZADO);
+    }
+
+    public Pedido findById(Long id) {
+        return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
     }
 }

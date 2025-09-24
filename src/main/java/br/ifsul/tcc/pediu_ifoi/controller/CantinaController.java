@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
@@ -17,6 +18,8 @@ import org.springframework.ui.Model;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ProdutoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
 import br.ifsul.tcc.pediu_ifoi.service.PedidoService;
@@ -255,5 +258,14 @@ public class CantinaController {
             System.out.println("-> Erro ao remover produto: " + e.getMessage());
             throw new RuntimeException("Erro ao remover produto");
         }
+    }
+
+    @GetMapping("/pedido/{id}/itens")
+    @ResponseBody
+    public List<ItemPedido> getItensPedido(@PathVariable Long id) {
+        System.out.println("-> Buscando itens do pedido " + id);
+        Pedido pedido = pedidoService.findById(id);
+        System.out.println("-> Itens encontrados: " + pedido.getItensPedido().size());
+        return pedido.getItensPedido();
     }
 }

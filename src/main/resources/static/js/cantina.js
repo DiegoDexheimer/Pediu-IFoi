@@ -77,4 +77,34 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
+
+  // Modal de detalhes do pedido
+  const pedidoModalEl = document.getElementById('pedidoModal');
+  if (pedidoModalEl) {
+    document.querySelectorAll('.dashboard-order').forEach(function (orderDiv) {
+      orderDiv.addEventListener('click', function () {
+        const pedidoId = orderDiv.getAttribute('data-pedido-id');
+        // Busca os itens do pedido via AJAX (exemplo usando fetch)
+        fetch(`/cantina/pedido/${pedidoId}/itens`)
+          .then(response => response.json())
+          .then(data => {
+            let html = '<ul>';
+            if (data && data.length > 0) {
+              data.forEach(item => {
+                html += `<li>${item.quantidade}x ${item.produto.nome} - R$ ${item.produto.preco}</li>`;
+              });
+            } else {
+              html += '<li>Nenhum produto neste pedido.</li>';
+            }
+            html += '</ul>';
+            document.getElementById('pedidoModalBody').innerHTML = html;
+            new bootstrap.Modal(pedidoModalEl).show();
+          })
+          .catch(() => {
+            document.getElementById('pedidoModalBody').innerHTML = 'Erro ao carregar itens do pedido.';
+            new bootstrap.Modal(pedidoModalEl).show();
+          });
+      });
+    });
+  }
 });
