@@ -19,6 +19,7 @@ import br.ifsul.tcc.pediu_ifoi.domain.dto.ProdutoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
+import br.ifsul.tcc.pediu_ifoi.service.PedidoService;
 import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +36,9 @@ public class CantinaController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @GetMapping("/cadastro_cantina")
     public String cadastrarCantina() {
@@ -119,12 +123,18 @@ public class CantinaController {
     }
 
     @GetMapping("/home_cantina")
-    public String homeCantina(HttpServletRequest request) {
+    public String homeCantina(HttpServletRequest request, Model model) {
         System.out.println("-> Acessando home da Cantina");
         if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cantina/login_cantina";
         }
+
+        model.addAttribute("pedidosPendentes", pedidoService.listarPedidosPendentes());
+        model.addAttribute("pedidosEmAndamento", pedidoService.listarPedidosEmAndamento());
+        model.addAttribute("pedidosFinalizados", pedidoService.listarPedidosFinalizados());
+        System.out.println("-> Pedidos pendentes e em andamento carregados com sucesso.");
+
         return "/cantina/home_cantina";
     }
 

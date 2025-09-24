@@ -59,4 +59,16 @@ public class PedidoService {
         System.out.println("Valor total do pedido: " + total);
         return total;
     }
+
+    public List<Pedido> listarPedidosPendentes() {
+        return pedidoRepository.findByStatusPedido(StatusPedido.PENDENTE);
+    }
+
+    public List<Pedido> listarPedidosEmAndamento() {
+        return pedidoRepository.findByStatusPedido(StatusPedido.EM_ANDAMENTO);
+    }
+
+    public List<Pedido> listarPedidosFinalizados() {
+        return pedidoRepository.findByStatusPedido(StatusPedido.FINALIZADO);
+    }
 }

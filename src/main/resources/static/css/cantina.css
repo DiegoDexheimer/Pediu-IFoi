@@ -121,3 +121,8 @@ a {
   font-size: 1.05rem;
   margin-top: 40px;
 }
+.dashboard-order:hover {
+  transform: scale(1.03);
+  transition: transform 0.18s;
+  z-index: 2;
+}
