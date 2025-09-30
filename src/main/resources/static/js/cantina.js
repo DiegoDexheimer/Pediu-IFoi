@@ -127,5 +127,37 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
     });
+
+  // Integração dos botões de ação para mudança de status
+  document.querySelectorAll('.dashboard-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const orderDiv = btn.closest('.dashboard-order');
+      const pedidoId = orderDiv.getAttribute('data-pedido-id');
+      let novoStatus = null;
+      if (btn.textContent.includes('Aceitar pedido')) {
+        novoStatus = 'EM_ANDAMENTO';
+      } else if (btn.textContent.includes('Avançar pedido')) {
+        novoStatus = 'FINALIZADO';
+      } else if (btn.textContent.includes('Finalizar entrega')) {
+        novoStatus = 'ENVIADO';
+      }
+      if (novoStatus && pedidoId) {
+        fetch(`/pedidos/${pedidoId}/status?status=${novoStatus}`, {
+          method: 'PUT',
+        })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao atualizar status do pedido.');
+            }
+          })
+          .catch(() => {
+            alert('Erro ao atualizar status do pedido.');
+          });
+      }
+    });
+  });
   }
 });
