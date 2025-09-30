@@ -268,4 +268,10 @@ public class CantinaController {
         System.out.println("-> Itens encontrados: " + pedido.getItensPedido().size());
         return pedido.getItensPedido();
     }
+
+    @GetMapping("/pedidos_cantina")
+    public String listarTodosPedidos(Model model) {
+        model.addAttribute("pedidos", pedidoService.listarTodosPedidos());
+        return "cantina/pedidos_cantina";
+    }
 }
