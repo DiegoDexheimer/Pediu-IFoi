@@ -89,10 +89,13 @@ document.addEventListener('DOMContentLoaded', function () {
           .then(response => response.json())
           .then(data => {
             let total = 0;
-            let html = `<div style="max-width:400px;">
-              <div class="pedido-modal-header">
-                <span style="font-size:1.15em;font-weight:bold;">Pedido #${pedidoId}</span>
-              </div>
+            // Tenta obter a data do pedido do elemento
+                let dataPedido = orderDiv.getAttribute('data-pedido-data') || '';
+                let html = `<div class="pedido-modal-container">
+                  <div class="pedido-modal-header-row">
+                    <span class="pedido-modal-id">Pedido #${pedidoId}</span>
+                    <span class="pedido-modal-data">${dataPedido}</span>
+                  </div>
             `;
             if (data && data.length > 0) {
               data.forEach(item => {
@@ -120,6 +123,26 @@ document.addEventListener('DOMContentLoaded', function () {
             html += `<hr><div class="pedido-total-row"><span>Total</span><span>R$ ${total.toFixed(2)}</span></div></div>`;
             document.getElementById('pedidoModalBody').innerHTML = html;
             new bootstrap.Modal(pedidoModalEl).show();
+
+            // Botão cancelar pedido
+            const btnCancelar = document.getElementById('btnCancelarPedido');
+            if (btnCancelar) {
+              btnCancelar.onclick = function () {
+                fetch(`/pedidos/${pedidoId}/status?status=CANCELADO`, {
+                  method: 'PUT',
+                })
+                  .then(response => {
+                    if (response.ok) {
+                      window.location.reload();
+                    } else {
+                      alert('Erro ao cancelar o pedido.');
+                    }
+                  })
+                  .catch(() => {
+                    alert('Erro ao cancelar o pedido.');
+                  });
+              };
+            }
           })
           .catch(() => {
             document.getElementById('pedidoModalBody').innerHTML = 'Erro ao carregar itens do pedido.';

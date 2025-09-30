@@ -168,3 +168,20 @@ a {
   font-size: 1.15em;
   margin-top: 12px;
 }
+.pedido-modal-container {
+  max-width: 400px;
+}
+.pedido-modal-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.pedido-modal-id {
+  font-size: 1.15em;
+  font-weight: bold;
+}
+.pedido-modal-data {
+  color: #555;
+  font-size: 1em;
+}
