@@ -82,4 +82,9 @@ public class PedidoService {
         pedido.setStatusPedido(novoStatus);
         return pedidoRepository.save(pedido);
     }
+
+    public List<Pedido> listarTodosPedidos() {
+        return pedidoRepository.findAll();
+    }
+
 }
