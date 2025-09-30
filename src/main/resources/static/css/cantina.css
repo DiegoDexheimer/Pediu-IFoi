@@ -126,3 +126,45 @@ a {
   transition: transform 0.18s;
   z-index: 2;
 }
+.pedido-item-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.pedido-item-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 16px;
+}
+.pedido-item-info {
+  flex: 1;
+}
+.pedido-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pedido-item-nome {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+.pedido-item-quantidade {
+  font-weight: bold;
+}
+.pedido-item-obs {
+  color: #888;
+  font-size: 0.98em;
+}
+.pedido-item-preco {
+  margin-left: 16px;
+  text-align: right;
+}
+.pedido-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1.15em;
+  margin-top: 12px;
+}

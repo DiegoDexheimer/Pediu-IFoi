@@ -88,15 +88,36 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/cantina/pedido/${pedidoId}/itens`)
           .then(response => response.json())
           .then(data => {
-            let html = '<ul>';
+            let total = 0;
+            let html = `<div style="max-width:400px;">
+              <div class="pedido-modal-header">
+                <span style="font-size:1.15em;font-weight:bold;">Pedido #${pedidoId}</span>
+              </div>
+            `;
             if (data && data.length > 0) {
               data.forEach(item => {
-                html += `<li>${item.quantidade}x ${item.produto.nome} - R$ ${item.produto.preco}</li>`;
+                total += item.quantidade * item.produto.preco;
+                let foto = item.produto.foto && item.produto.foto.trim() ? item.produto.foto : '/default.png';
+                html += `
+                  <div class="pedido-item-row">
+                    <img src="${foto}" alt="${item.produto.nome}" class="pedido-item-img">
+                    <div class="pedido-item-info">
+                      <div class="pedido-item-top">
+                        <strong class="pedido-item-nome">${item.produto.nome}</strong>
+                        <span class="pedido-item-quantidade">${item.quantidade}x</span>
+                      </div>
+                      <div class="pedido-item-obs">${item.observacao || ''}</div>
+                    </div>
+                    <div class="pedido-item-preco">
+                      <span>R$ ${item.produto.preco.toFixed(2)}</span>
+                    </div>
+                  </div>
+                `;
               });
             } else {
-              html += '<li>Nenhum produto neste pedido.</li>';
+              html += '<div>Nenhum produto neste pedido.</div>';
             }
-            html += '</ul>';
+            html += `<hr><div class="pedido-total-row"><span>Total</span><span>R$ ${total.toFixed(2)}</span></div></div>`;
             document.getElementById('pedidoModalBody').innerHTML = html;
             new bootstrap.Modal(pedidoModalEl).show();
           })
