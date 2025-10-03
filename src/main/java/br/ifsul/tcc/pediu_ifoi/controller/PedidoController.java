@@ -1,11 +1,17 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.PedidoDTO;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.StatusPedido;
 import br.ifsul.tcc.pediu_ifoi.service.PedidoService;
 
 @Controller
@@ -22,5 +28,12 @@ public class PedidoController {
     public void criarPedido(@RequestBody PedidoDTO pedido) {
         System.out.println("Criando pedido: " + pedido);
         pedidoService.salvarPedido(pedido);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Pedido> atualizarStatus(@PathVariable Long id, @RequestParam StatusPedido status) {
+        System.out.println("Atualizando status do pedido ID: #" + id + " para: " + status.getDescricao());
+        Pedido pedidoAtualizado = pedidoService.atualizarStatus(id, status);
+        return ResponseEntity.ok(pedidoAtualizado);
     }
 }

@@ -18,7 +18,7 @@ import br.ifsul.tcc.pediu_ifoi.repository.PedidoRepository;
 
 @Service
 public class PedidoService {
-    
+
     @Autowired
     private PedidoRepository pedidoRepository;
 
@@ -54,7 +54,8 @@ public class PedidoService {
         Double total = 0.0;
         for (ItemPedido item : produtos) {
             total += item.getProduto().getPreco() * item.getQuantidade();
-            System.out.println("Produto: " + item.getProduto().getNome() + ", Quantidade: " + item.getQuantidade() + ", Subtotal: " + (item.getProduto().getPreco() * item.getQuantidade()));
+            System.out.println("Produto: " + item.getProduto().getNome() + ", Quantidade: " + item.getQuantidade()
+                    + ", Subtotal: " + (item.getProduto().getPreco() * item.getQuantidade()));
         }
         System.out.println("Valor total do pedido: " + total);
         return total;
@@ -75,4 +76,15 @@ public class PedidoService {
     public Pedido findById(Long id) {
         return pedidoRepository.findById(id).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
     }
+
+    public Pedido atualizarStatus(Long idPedido, StatusPedido novoStatus) {
+        Pedido pedido = findById(idPedido);
+        pedido.setStatusPedido(novoStatus);
+        return pedidoRepository.save(pedido);
+    }
+
+    public List<Pedido> listarTodosPedidos() {
+        return pedidoRepository.findAll();
+    }
+
 }

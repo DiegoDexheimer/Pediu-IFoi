@@ -21,6 +21,9 @@
           <a class="nav-link active" href="/cantina/home_cantina">Home</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/cantina/pedidos_cantina">Pedidos</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/cantina/cadastrar_produto"
             >Cadastrar produto</a
           >
@@ -61,7 +64,7 @@
               >
                 <div
                   class="dashboard-order"
-                  th:attr="data-pedido-id=${pedido.idPedido}"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
                 >
                   <div
                     class="dashboard-order-title"
@@ -102,7 +105,7 @@
               >
                 <div
                   class="dashboard-order"
-                  th:attr="data-pedido-id=${pedido.idPedido}"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
                 >
                   <div
                     class="dashboard-order-title"
@@ -144,7 +147,7 @@
               >
                 <div
                   class="dashboard-order"
-                  th:attr="data-pedido-id=${pedido.idPedido}"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
                 >
                   <div
                     class="dashboard-order-title"
@@ -178,6 +181,9 @@
             <h5 class="modal-title" id="pedidoModalLabel">
               Detalhes do Pedido
             </h5>
+            <button id="btnCancelarPedido" class="btn btn-danger btn-sm ms-2">
+              Cancelar pedido
+            </button>
             <button
               type="button"
               class="btn-close"

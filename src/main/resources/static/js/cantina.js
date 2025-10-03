@@ -88,17 +88,61 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(`/cantina/pedido/${pedidoId}/itens`)
           .then(response => response.json())
           .then(data => {
-            let html = '<ul>';
+            let total = 0;
+            // Tenta obter a data do pedido do elemento
+                let dataPedido = orderDiv.getAttribute('data-pedido-data') || '';
+                let html = `<div class="pedido-modal-container">
+                  <div class="pedido-modal-header-row">
+                    <span class="pedido-modal-id">Pedido #${pedidoId}</span>
+                    <span class="pedido-modal-data">${dataPedido}</span>
+                  </div>
+            `;
             if (data && data.length > 0) {
               data.forEach(item => {
-                html += `<li>${item.quantidade}x ${item.produto.nome} - R$ ${item.produto.preco}</li>`;
+                total += item.quantidade * item.produto.preco;
+                let foto = item.produto.foto && item.produto.foto.trim() ? item.produto.foto : '/default.png';
+                html += `
+                  <div class="pedido-item-row">
+                    <img src="${foto}" alt="${item.produto.nome}" class="pedido-item-img">
+                    <div class="pedido-item-info">
+                      <div class="pedido-item-top">
+                        <strong class="pedido-item-nome">${item.produto.nome}</strong>
+                        <span class="pedido-item-quantidade">${item.quantidade}x</span>
+                      </div>
+                      <div class="pedido-item-obs">${item.observacao || ''}</div>
+                    </div>
+                    <div class="pedido-item-preco">
+                      <span>R$ ${item.produto.preco.toFixed(2)}</span>
+                    </div>
+                  </div>
+                `;
               });
             } else {
-              html += '<li>Nenhum produto neste pedido.</li>';
+              html += '<div>Nenhum produto neste pedido.</div>';
             }
-            html += '</ul>';
+            html += `<hr><div class="pedido-total-row"><span>Total</span><span>R$ ${total.toFixed(2)}</span></div></div>`;
             document.getElementById('pedidoModalBody').innerHTML = html;
             new bootstrap.Modal(pedidoModalEl).show();
+
+            // Botão cancelar pedido
+            const btnCancelar = document.getElementById('btnCancelarPedido');
+            if (btnCancelar) {
+              btnCancelar.onclick = function () {
+                fetch(`/pedidos/${pedidoId}/status?status=CANCELADO`, {
+                  method: 'PUT',
+                })
+                  .then(response => {
+                    if (response.ok) {
+                      window.location.reload();
+                    } else {
+                      alert('Erro ao cancelar o pedido.');
+                    }
+                  })
+                  .catch(() => {
+                    alert('Erro ao cancelar o pedido.');
+                  });
+              };
+            }
           })
           .catch(() => {
             document.getElementById('pedidoModalBody').innerHTML = 'Erro ao carregar itens do pedido.';
@@ -106,5 +150,37 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       });
     });
+
+  // Integração dos botões de ação para mudança de status
+  document.querySelectorAll('.dashboard-btn').forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const orderDiv = btn.closest('.dashboard-order');
+      const pedidoId = orderDiv.getAttribute('data-pedido-id');
+      let novoStatus = null;
+      if (btn.textContent.includes('Aceitar pedido')) {
+        novoStatus = 'EM_ANDAMENTO';
+      } else if (btn.textContent.includes('Avançar pedido')) {
+        novoStatus = 'FINALIZADO';
+      } else if (btn.textContent.includes('Finalizar entrega')) {
+        novoStatus = 'ENVIADO';
+      }
+      if (novoStatus && pedidoId) {
+        fetch(`/pedidos/${pedidoId}/status?status=${novoStatus}`, {
+          method: 'PUT',
+        })
+          .then(response => {
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              alert('Erro ao atualizar status do pedido.');
+            }
+          })
+          .catch(() => {
+            alert('Erro ao atualizar status do pedido.');
+          });
+      }
+    });
+  });
   }
 });
