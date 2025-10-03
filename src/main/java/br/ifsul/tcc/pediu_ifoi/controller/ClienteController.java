@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
@@ -26,7 +28,12 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/cliente")
+@SessionAttributes("carrinho")
 public class ClienteController {
+    @ModelAttribute("carrinho")
+    public br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho criarCarrinho() {
+        return new br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho();
+    }
 
     @Autowired
     private ClienteService clienteService;
@@ -58,7 +65,8 @@ public class ClienteController {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
             throw new RuntimeException("Erro ao cadastrar cliente");
         }
-        //adicionar confirmação de criação bem sucedida e um delay para redirecionar para login
+        // adicionar confirmação de criação bem sucedida e um delay para redirecionar
+        // para login
         return "redirect:/cliente/login_cliente";
     }
 
@@ -120,13 +128,13 @@ public class ClienteController {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cliente/login_cliente";
         }
-        // Busca todos os produtos disponíveis
         List<Produto> produtos = produtoService.listarProdutos();
         model.addAttribute("produtos", produtos);
         return "/cliente/home_cliente";
     }
 
-    @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class, org.springframework.beans.TypeMismatchException.class })
+    @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class,
+            org.springframework.beans.TypeMismatchException.class })
     public String handleValidationException(Exception ex, Model model) {
         String errorMsg = "Erro ao processar requisição: ";
         if (ex instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
@@ -140,7 +148,7 @@ public class ClienteController {
         return "/cliente/login_cliente";
     }
 
-        @GetMapping("/produto/{id}")
+    @GetMapping("/produto/{id}")
     public String produtoDetalhe(@PathVariable Long id, Model model, HttpServletRequest request) {
         if (!isAuthenticated(request)) {
             return "redirect:/cliente/login_cliente";
@@ -151,13 +159,26 @@ public class ClienteController {
     }
 
     @PostMapping("/adicionar_carrinho")
-    public String adicionarAoCarrinho(@RequestParam Long produtoId, @RequestParam int quantidade, HttpServletRequest request) {
+    public String adicionarAoCarrinho(@RequestParam Long produtoId,
+            @RequestParam int quantidade,
+            @ModelAttribute("carrinho") Carrinho carrinho,
+            HttpServletRequest request) {
         if (!isAuthenticated(request)) {
             return "redirect:/cliente/login_cliente";
         }
-        // TODO: Adicionar lógica para adicionar ao carrinho do cliente
-        // Exemplo: carrinhoService.adicionarProduto(produtoId, quantidade, clienteId);
+        Produto produto = produtoService.buscarProdutoPorId(produtoId);
+        carrinho.adicionarProduto(produto, quantidade);
+        System.out.println("Carrinho atualizado: " + carrinho);
         return "redirect:/cliente/home_cliente";
     }
 
+    @GetMapping("/carrinho")
+    public String carrinhoCliente(@ModelAttribute("carrinho") Carrinho carrinho, Model model,
+            HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        model.addAttribute("carrinho", carrinho);
+        return "cliente/carrinho";
+    }
 }

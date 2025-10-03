@@ -10,7 +10,7 @@ import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemPedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.StatusPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 import br.ifsul.tcc.pediu_ifoi.repository.PedidoRepository;
 import br.ifsul.tcc.pediu_ifoi.repository.ClienteRepository;
 import br.ifsul.tcc.pediu_ifoi.repository.ProdutoRepository;
@@ -30,14 +30,19 @@ public class PedidoMockInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
         if (pedidoRepository.count() == 0) {
-            // Cria e salva um cliente
-            Cliente cliente = new Cliente();
-            cliente.setNome("Cliente Mock");
-            cliente.setLogin("mockuser");
-            cliente.setSenha("123456");
-            cliente.setTelefone("51999999999");
-            cliente = clienteRepository.save(cliente);
+            // Busca um cliente já existente do mock (ex: Diego)
+            Cliente cliente = clienteRepository.findByLogin("diego");
+            if (cliente == null) {
+                // fallback: cria Diego se não existir
+                cliente = new Cliente();
+                cliente.setNome("Diego");
+                cliente.setLogin("diego");
+                cliente.setSenha("senha");
+                cliente.setTelefone("549999999999");
+                cliente = clienteRepository.save(cliente);
+            }
 
             // Cria e salva um produto
             Produto produto = new Produto();

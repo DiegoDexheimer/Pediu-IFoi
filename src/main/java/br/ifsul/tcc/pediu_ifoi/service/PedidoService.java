@@ -13,7 +13,7 @@ import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemPedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.StatusPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 import br.ifsul.tcc.pediu_ifoi.repository.PedidoRepository;
 
 @Service

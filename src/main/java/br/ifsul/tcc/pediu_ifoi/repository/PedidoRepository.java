@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.StatusPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {

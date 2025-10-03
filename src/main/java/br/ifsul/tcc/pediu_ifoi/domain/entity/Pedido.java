@@ -3,6 +3,7 @@ package br.ifsul.tcc.pediu_ifoi.domain.entity;
 import java.sql.Date;
 import java.util.List;
 
+import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

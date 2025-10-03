@@ -51,7 +51,7 @@
         <img class="produto-img" src="/static/default_produto.png" alt="Imagem do produto">
         <div class="produto-nome" th:text="${produto.nome}">Nome do produto</div>
     <div class="produto-preco" th:text="'R$ ' + ${produto.preco}">Preço</div>
-        <form th:action="@{/cliente/adicionar_carrinho}" method="post" id="form-adicionar-produto">
+    <form th:action="@{/cliente/adicionar_carrinho}" method="post" id="form-adicionar-produto">
             <input type="hidden" name="produtoId" th:value="${produto.id}" />
             <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
                 <div class="quantidade-box">
@@ -90,6 +90,8 @@
                 inputQuantidade.value = qtd;
                 valorTotal.textContent = 'R$ ' + (precoProduto * qtd).toFixed(2).replace('.', ',');
             });
+
+            // O submit padrão do formulário já envia o produto ao backend e adiciona ao carrinho
         </script>
         <a class="voltar" th:href="@{/cliente/home_cliente}">Voltar aos produtos</a>
     </div>
