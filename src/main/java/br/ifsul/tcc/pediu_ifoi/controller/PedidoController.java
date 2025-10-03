@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.PedidoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.StatusPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 import br.ifsul.tcc.pediu_ifoi.service.PedidoService;
 
 @Controller

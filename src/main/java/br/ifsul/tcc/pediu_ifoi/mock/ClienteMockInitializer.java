@@ -32,6 +32,13 @@ public class ClienteMockInitializer implements CommandLineRunner {
             cliente2.setSenha("senha");
             cliente2.setTelefone("549888888888");
             clienteRepository.save(cliente2);
+
+            Cliente cliente3 = new Cliente();
+            cliente3.setNome("Cliente");
+            cliente3.setLogin("login");
+            cliente3.setSenha("senha");
+            cliente3.setTelefone("549777777777");
+            clienteRepository.save(cliente3);
         }
     }
 }

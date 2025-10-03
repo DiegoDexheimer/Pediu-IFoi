@@ -32,27 +32,15 @@ public class PedidoMockInitializer implements CommandLineRunner {
     public void run(String... args) {
 
         if (pedidoRepository.count() == 0) {
-<<<<<<< HEAD
-            // Busca um cliente já existente do mock (ex: Diego)
-            Cliente cliente = clienteRepository.findByLogin("diego");
+            Cliente cliente = clienteRepository.findByLogin("login");
             if (cliente == null) {
-                // fallback: cria Diego se não existir
                 cliente = new Cliente();
-                cliente.setNome("Diego");
-                cliente.setLogin("diego");
+                cliente.setNome("Cliente");
+                cliente.setLogin("login");
                 cliente.setSenha("senha");
-                cliente.setTelefone("549999999999");
+                cliente.setTelefone("549777777777");
                 cliente = clienteRepository.save(cliente);
             }
-=======
-            // Pedido 1 - PENDENTE
-            Cliente cliente1 = new Cliente();
-            cliente1.setNome("Cliente Mock");
-            cliente1.setLogin("mockuser");
-            cliente1.setSenha("123456");
-            cliente1.setTelefone("51999999999");
-            cliente1 = clienteRepository.save(cliente1);
->>>>>>> 6ae9a5fde4968040cab5eb9009148cc286b5a886
 
             Produto produto1 = new Produto();
             produto1.setNome("Produto Mock");
@@ -79,7 +67,7 @@ public class PedidoMockInitializer implements CommandLineRunner {
             itensPedido1.add(itemPedido2);
 
             Pedido pedido1 = new Pedido();
-            pedido1.setCliente(cliente1);
+            pedido1.setCliente(cliente);
             pedido1.setItensPedido(itensPedido1);
             pedido1.setStatusPedido(StatusPedido.PENDENTE);
             pedido1.setDataPedido(new java.sql.Date(System.currentTimeMillis()));
