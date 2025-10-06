@@ -1,99 +1,92 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detalhe do Produto</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
-    <style>
-        body { font-family: 'Montserrat', Arial, sans-serif; background: #f7f7f7; margin: 0; }
-        .container { max-width: 400px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 24px; }
-        .produto-img { width: 100%; max-width: 220px; display: block; margin: 0 auto 16px auto; border-radius: 8px; }
-        .produto-nome { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; color: #218838; }
-        .produto-preco { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
-        .form-group { margin-bottom: 16px; }
-        label { font-weight: 600; }
-        .quantidade-box { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 8px; padding: 4px 12px; background: #fff; }
-        .quantidade-btn { background: none; border: none; color: #e74c3c; font-size: 1.4rem; cursor: pointer; }
-        .quantidade-num { margin: 0 12px; font-size: 1.2rem; min-width: 24px; text-align: center; }
-        #btn-adicionar {
-            background: #218838;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            min-width: 220px;
-            justify-content: center;
-        }
-        #valor-total {
-            white-space: nowrap;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        .voltar { display: block; margin-top: 24px; text-align: center; color: #218838; text-decoration: none; font-weight: 600; }
-        @media (max-width: 600px) {
-            .container { max-width: 98vw; margin: 16px auto; padding: 8px; }
-            .produto-img { max-width: 140px; }
-            #btn-adicionar { min-width: 140px; font-size: 1rem; padding: 10px 8px; gap: 10px; }
-            .quantidade-box { padding: 2px 6px; }
-            .quantidade-num { font-size: 1rem; margin: 0 6px; }
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#218838", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
 </head>
-<body>
-    <div class="container">
-        <img class="produto-img" src="/static/default_produto.png" alt="Imagem do produto">
-        <div class="produto-nome" th:text="${produto.nome}">Nome do produto</div>
-    <div class="produto-preco" th:text="'R$ ' + ${produto.preco}">Preço</div>
-    <form th:action="@{/cliente/adicionar_carrinho}" method="post" id="form-adicionar-produto">
-            <input type="hidden" name="produtoId" th:value="${produto.id}" />
-            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-                <div class="quantidade-box">
-                    <button type="button" id="btn-menos" class="quantidade-btn">-</button>
-                    <span id="quantidade" class="quantidade-num">1</span>
-                    <input type="hidden" name="quantidade" id="input-quantidade" value="1" />
-                    <button type="button" id="btn-mais" class="quantidade-btn">+</button>
-                </div>
-                <button type="submit" id="btn-adicionar">
-                    <span>Adicionar</span>
-                    <span id="valor-total" th:text="'R$ ' + ${produto.preco}">R$ 0,00</span>
-                </button>
+<body class="bg-background-light text-stone-800 font-display min-h-screen">
+<div class="flex flex-col min-h-screen pb-20">
+    <header class="sticky top-0 z-10 bg-background-light/80 backdrop-blur-sm border-b border-background-dark/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center gap-4 h-16">
+                <img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary" />
+                <h2 class="text-xl font-bold text-background-dark">Pediu-IFoi</h2>
             </div>
-        </form>
-        <script>
-            const btnMenos = document.getElementById('btn-menos');
-            const btnMais = document.getElementById('btn-mais');
-            const quantidadeSpan = document.getElementById('quantidade');
-            const inputQuantidade = document.getElementById('input-quantidade');
-            const valorTotal = document.getElementById('valor-total');
-            const precoProduto = parseFloat(valorTotal.textContent.replace('R$ ', '').replace(',', '.'));
+        </div>
+    </header>
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-lg mx-auto">
+            <div class="rounded-xl overflow-hidden mb-8">
+                <img class="w-full h-56 object-cover" src="/static/default_produto.png" alt="Imagem do produto" />
+            </div>
+            <h1 class="text-2xl font-bold text-background-dark mb-2" th:text="${produto.nome}">Nome do produto</h1>
+            <p class="text-xl font-bold text-primary mb-6" th:text="'R$ ' + ${produto.preco}">Preço</p>
+            <form th:action="@{/cliente/adicionar_carrinho}" method="post" id="form-adicionar-produto" class="mb-8">
+                <input type="hidden" name="produtoId" th:value="${produto.id}" />
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="flex items-center border border-stone-300 rounded-lg">
+                        <button type="button" id="btn-menos" class="px-3 py-2 text-stone-600 hover:bg-stone-200 rounded-l-lg">-</button>
+                        <span id="quantidade" class="px-4 py-2 font-bold text-background-dark">1</span>
+                        <input type="hidden" name="quantidade" id="input-quantidade" value="1" />
+                        <button type="button" id="btn-mais" class="px-3 py-2 text-stone-600 hover:bg-stone-200 rounded-r-lg">+</button>
+                    </div>
+                    <button type="submit" id="btn-adicionar" class="flex-1 text-white bg-primary hover:bg-primary/90 font-bold rounded-lg text-base px-5 py-3 text-center transition">
+                        <span>Adicionar</span>
+                        <span id="valor-total" th:text="'R$ ' + ${produto.preco}">R$ 0,00</span>
+                    </button>
+                </div>
+            </form>
+            <a class="block text-center text-primary font-bold mt-4" th:href="@{/cliente/home_cliente}">Voltar aos produtos</a>
+        </div>
+    </main>
+    <nav class="fixed bottom-0 left-0 right-0 bg-background-light border-t border-background-dark/10 shadow-lg md:hidden">
+        <div class="flex justify-around items-center h-16">
+            <a class="flex flex-col items-center justify-center text-primary" th:href="@{/cliente/home_cliente}">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm64-84a64,64,0,0,1-64,64V64A64,64,0,0,1,192,128Z"></path></svg>
+                <span class="text-xs font-medium">Início</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-stone-600 hover:text-primary transition-colors" href="#">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M228.43,89.57l-96-64a8,8,0,0,0-8.86,0l-96,64A8,8,0,0,0,24,96V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V96A8,8,0,0,0,228.43,89.57ZM216,200H40V100.75l88-58.67,88,58.67Z"></path></svg>
+                <span class="text-xs font-medium">Pedidos</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-primary relative" th:href="@{/cliente/carrinho}">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path></svg>
+                <span class="text-xs font-medium">Carrinho</span>
+            </a>
+        </div>
+    </nav>
+</div>
+<script>
+    const btnMenos = document.getElementById('btn-menos');
+    const btnMais = document.getElementById('btn-mais');
+    const quantidadeSpan = document.getElementById('quantidade');
+    const inputQuantidade = document.getElementById('input-quantidade');
+    const valorTotal = document.getElementById('valor-total');
+    const precoProduto = parseFloat(valorTotal.textContent.replace('R$ ', '').replace(',', '.'));
 
-            btnMenos.addEventListener('click', () => {
-                let qtd = parseInt(quantidadeSpan.textContent);
-                if (qtd > 1) {
-                    qtd--;
-                    quantidadeSpan.textContent = qtd;
-                    inputQuantidade.value = qtd;
-                    valorTotal.textContent = 'R$ ' + (precoProduto * qtd).toFixed(2).replace('.', ',');
-                }
-            });
-            btnMais.addEventListener('click', () => {
-                let qtd = parseInt(quantidadeSpan.textContent);
-                qtd++;
-                quantidadeSpan.textContent = qtd;
-                inputQuantidade.value = qtd;
-                valorTotal.textContent = 'R$ ' + (precoProduto * qtd).toFixed(2).replace('.', ',');
-            });
-
-            // O submit padrão do formulário já envia o produto ao backend e adiciona ao carrinho
-        </script>
-        <a class="voltar" th:href="@{/cliente/home_cliente}">Voltar aos produtos</a>
-    </div>
+    btnMenos.addEventListener('click', () => {
+        let qtd = parseInt(quantidadeSpan.textContent);
+        if (qtd > 1) {
+            qtd--;
+            quantidadeSpan.textContent = qtd;
+            inputQuantidade.value = qtd;
+            valorTotal.textContent = 'R$ ' + (precoProduto * qtd).toFixed(2).replace('.', ',');
+        }
+    });
+    btnMais.addEventListener('click', () => {
+        let qtd = parseInt(quantidadeSpan.textContent);
+        qtd++;
+        quantidadeSpan.textContent = qtd;
+        inputQuantidade.value = qtd;
+        valorTotal.textContent = 'R$ ' + (precoProduto * qtd).toFixed(2).replace('.', ',');
+    });
+</script>
 </body>
 </html>

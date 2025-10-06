@@ -1,66 +1,81 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pediu-IFoi | Home do Cliente</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap">
-    <link rel="stylesheet" href="/css/cliente.css">
+    <link crossorigin href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Montserrat:wght@400;700" onload="this.rel='stylesheet'" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#218838", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
 </head>
-
-<body>
-    <div class="header">
-        <img src="/static/favicon.ico" alt="Logo Pediu-IFoi">
-        <span class="header-title">Pediu-IFoi</span>
-        <div class="header-actions">
-            <a href="#"><span title="Buscar"><svg width="22" height="22" fill="currentColor">
-                        <circle cx="10" cy="10" r="8" stroke="#fff" stroke-width="2" fill="none" />
-                        <line x1="16" y1="16" x2="21" y2="21" stroke="#fff" stroke-width="2" />
-                    </svg></span></a>
-            
-            <a href="#">Perfil</a>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Exibe todos os produtos disponíveis -->
-        <div class="category">Produtos disponíveis</div>
-        <div class="products">
-            <a th:each="produto : ${produtos}" th:href="@{'/cliente/produto/' + ${produto.id}}" style="text-decoration:none;color:inherit;">
-                <div class="product-card">
-                    <img th:src="'/static/default_produto.png'" alt="Imagem do produto">
-                    <div class="product-info">
-                        <div class="product-title" th:text="${produto.nome}">Nome do produto</div>
-                        <div class="product-price" th:text="'R$ ' + ${produto.preco}">Preço</div>
+<body class="bg-background-light font-display min-h-screen">
+<div class="flex flex-col min-h-screen">
+    <header class="sticky top-0 z-10 bg-background-light/80 backdrop-blur-sm border-b border-background-dark/10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col items-center justify-center pt-4 pb-2">
+                <div class="flex items-center gap-2 text-background-dark mb-4">
+                    <img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary" />
+                    <h1 class="text-2xl font-bold">Pediu-IFoi</h1>
+                </div>
+                <div class="w-full max-w-md">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-background-dark/50" fill="currentColor" viewBox="0 0 256 256">
+                                <circle cx="10" cy="10" r="8" stroke="#fff" stroke-width="2" fill="none" />
+                                <line x1="16" y1="16" x2="21" y2="21" stroke="#fff" stroke-width="2" />
+                            </svg>
+                        </div>
+                        <input class="form-input w-full pl-10 pr-4 py-2 rounded-lg bg-background-light/50 text-background-dark border-background-dark/20 focus:ring-primary focus:border-primary" placeholder="Buscar produto..." />
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
-    </div>
-    <div class="bottom-nav">
-        <a href="#" class="nav-item">
-            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
-                <path d="M3 12L12 3l9 9" />
-                <path d="M4 10v10h16V10" />
-            </svg>
-            Início
-        </a>
-        <a href="#" class="nav-item">
-            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
-                <rect x="4" y="4" width="16" height="16" rx="4" />
-                <path d="M8 10h8M8 14h8" />
-            </svg>
-            Pedidos
-        </a>
-    <a th:href="@{/cliente/carrinho}" class="nav-item">
-            <svg width="24" height="24" fill="none" stroke="#218838" stroke-width="2">
-                <circle cx="12" cy="12" r="8" />
-                <path d="M8 12h8M12 8v8" />
-            </svg>
-            Carrinho
-        </a>
-    </div>
+    </header>
+    <main class="flex-grow pb-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h2 class="text-3xl font-bold text-background-dark mb-6">Produtos disponíveis</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <a th:each="produto : ${produtos}" th:href="@{'/cliente/produto/' + ${produto.id}}" class="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 group flex flex-col">
+                    <div class="relative">
+                        <img th:src="'/static/default_produto.png'" alt="Imagem do produto" class="w-full h-56 object-cover" />
+                    </div>
+                    <div class="p-4 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-background-dark" th:text="${produto.nome}">Nome do produto</h3>
+                        </div>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-xl font-bold text-primary" th:text="'R$ ' + ${produto.preco}">Preço</span>
+                            <button class="bg-primary/20 text-primary hover:bg-primary hover:text-white rounded-full p-2 transition-colors duration-300" title="Adicionar ao carrinho">
+                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256">
+                                    <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+    <nav class="fixed bottom-0 left-0 right-0 bg-background-light/90 backdrop-blur-sm border-t border-background-dark/10 z-20">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-around h-16">
+                <a class="flex flex-col items-center gap-1 text-sm font-medium text-background-dark/80 hover:text-primary" th:href="@{/cliente/home_cliente}">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm64-84a64,64,0,0,1-64,64V64A64,64,0,0,1,192,128Z"></path></svg>
+                    <span>Início</span>
+                </a>
+                <a class="flex flex-col items-center gap-1 text-sm font-medium text-background-dark/80 hover:text-primary" href="#">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M228.43,89.57l-96-64a8,8,0,0,0-8.86,0l-96,64A8,8,0,0,0,24,96V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V96A8,8,0,0,0,228.43,89.57ZM216,200H40V100.75l88-58.67,88,58.67Z"></path></svg>
+                    <span>Pedidos</span>
+                </a>
+                <a class="flex flex-col items-center gap-1 text-sm font-medium text-primary" th:href="@{/cliente/carrinho}">
+                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path></svg>
+                    <span>Carrinho</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
 </body>
-
 </html>
