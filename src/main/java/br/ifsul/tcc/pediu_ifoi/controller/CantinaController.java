@@ -67,7 +67,8 @@ public class CantinaController {
             System.out.println("-> Cadastro de Cantina realizado com sucesso");
         } catch (Exception e) {
             System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
-            throw new RuntimeException("Erro ao cadastrar Cantina");
+            model.addAttribute("registrationError", e.getMessage());
+            return "/cantina/cadastro_cantina";
         }
 
         return "redirect:/";

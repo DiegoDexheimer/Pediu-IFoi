@@ -22,6 +22,12 @@
             <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
           </ul>
         </div>
+        <div th:if="${registrationError}" class="alert alert-danger">
+          <strong>Dados inválidos:</strong>
+          <ul>
+            <li th:text="${registrationError}"></li>
+          </ul>
+        </div>
         <form action="/cantina/cadastro_cantina" method="post">
           <div class="mb-3">
             <label for="login" class="form-label">Login</label>
