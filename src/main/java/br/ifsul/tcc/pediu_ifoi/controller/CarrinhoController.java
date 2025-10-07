@@ -88,11 +88,12 @@ public class CarrinhoController {
     }
 
     @PostMapping("/finalizar")
-    public String finalizarCompra(@ModelAttribute("carrinho") Carrinho carrinho, @RequestParam Long clienteId, HttpServletRequest request) {
+    public String finalizarCompra(@ModelAttribute("carrinho") Carrinho carrinho, HttpServletRequest request) {
         if (!isAuthenticated(request)) {
             return "redirect:/cliente/login_cliente";
         }
 
+        Long clienteId = (Long) request.getSession().getAttribute("clienteId");
         carrinhoService.finalizarCompra(carrinho, clienteId);
         return "redirect:/cliente/home_cliente";
     }

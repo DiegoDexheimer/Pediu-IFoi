@@ -92,9 +92,7 @@ public class ClienteController {
             cookie.setPath("/");
             response.addCookie(cookie);
 
-            
-            Long clienteId = (Long) request.getSession().getAttribute("clienteId");
-            
+            request.getSession().setAttribute("clienteId", cliente.getIdUsuario());
             System.out.println("-> Login de cliente realizado com sucesso");
             return "redirect:/cliente/home_cliente";
 
