@@ -71,7 +71,7 @@ public class CantinaController {
             return "/cantina/cadastro_cantina";
         }
 
-        return "redirect:/";
+        return "/cantina/login_cantina";
     }
 
     @GetMapping("/login_cantina")

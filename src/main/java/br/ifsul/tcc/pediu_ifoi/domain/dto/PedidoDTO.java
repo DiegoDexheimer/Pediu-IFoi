@@ -1,7 +1,8 @@
 package br.ifsul.tcc.pediu_ifoi.domain.dto;
 
-import java.util.HashMap;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 
-public record PedidoDTO(Long idCliente, HashMap<Long, Integer> produtos) {
+public record PedidoDTO(Cliente cliente, Carrinho carrinho) {
 
 }

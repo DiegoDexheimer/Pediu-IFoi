@@ -3,13 +3,14 @@ package br.ifsul.tcc.pediu_ifoi.service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.PedidoDTO;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemCarrinho;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemPedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
@@ -23,20 +24,18 @@ public class PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Autowired
-    private ClienteService clienteService;
-
-    @Autowired
     private ProdutoService produtoService;
 
     public void salvarPedido(PedidoDTO pedido) {
-        Cliente cliente = clienteService.buscarClientePorId(pedido.idCliente());
+        Cliente cliente = pedido.cliente();
         System.out.println("Salvando pedido para o cliente: " + cliente.getNome());
 
+        Carrinho carrinho = pedido.carrinho();
         List<ItemPedido> produtos = new ArrayList<>();
-        for (Map.Entry<Long, Integer> entry : pedido.produtos().entrySet()) {
-            Long produtoId = entry.getKey();
-            Integer quantidade = entry.getValue();
-            Produto produto = produtoService.buscarProdutoPorId(produtoId);
+        for (ItemCarrinho item : carrinho.getItens()) {
+            Produto produto = item.getProduto();
+            Integer quantidade = item.getQuantidade();
+            produto = produtoService.buscarProdutoPorId(produto.getId());
             produtos.add(new ItemPedido(null, produto, quantidade));
             System.out.println("Adicionando produto: " + produto.getNome() + " com quantidade: " + quantidade);
         }
