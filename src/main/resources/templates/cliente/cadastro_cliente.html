@@ -23,6 +23,12 @@
 					 <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
 				</ul>
 		  </div>
+		  <div th:if="${alertError}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+				<strong>Dados inválidos:</strong>
+				<ul class="list-disc ml-5">
+					 <li th:text="${alertError}"></li>
+				</ul>
+		  </div>
 		  <form action="/cliente/cadastro_cliente" method="post" id="cadastroForm" class="space-y-4" novalidate>
 				<div>
 					<label class="text-sm font-medium text-gray-700 dark:text-gray-200" for="nome">Nome</label>

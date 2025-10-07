@@ -56,7 +56,8 @@ public class ClienteController {
             System.out.println("-> Cliente cadastrado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
-            throw new RuntimeException("Erro ao cadastrar cliente");
+            model.addAttribute("alertError", e.getMessage());
+            return "/cliente/cadastro_cliente";
         }
         // adicionar confirmação de criação bem sucedida e um delay para redirecionar
         // para login
