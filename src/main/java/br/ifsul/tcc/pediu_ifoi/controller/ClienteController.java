@@ -1,5 +1,7 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
+import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +11,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
@@ -28,18 +26,13 @@ import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/cliente")
-@SessionAttributes("carrinho")
 public class ClienteController {
-    @ModelAttribute("carrinho")
-    public br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho criarCarrinho() {
-        return new br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho();
-    }
 
     @Autowired
     private ClienteService clienteService;
 
     @Autowired
-    private br.ifsul.tcc.pediu_ifoi.service.ProdutoService produtoService;
+    private ProdutoService produtoService;
 
     @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
@@ -78,7 +71,7 @@ public class ClienteController {
 
     @PostMapping("/login_cliente")
     public String loginCliente(@Valid @ModelAttribute ClienteLoginDTO clienteLoginDTO, BindingResult bindingResult,
-            Model model, HttpServletResponse response) {
+            Model model, HttpServletResponse response, HttpServletRequest request) {
 
         System.out.println("-> Iniciando login de cliente");
 
@@ -98,6 +91,7 @@ public class ClienteController {
             cookie.setPath("/");
             response.addCookie(cookie);
 
+            
             System.out.println("-> Login de cliente realizado com sucesso");
             return "redirect:/cliente/home_cliente";
 
@@ -148,37 +142,5 @@ public class ClienteController {
         return "/cliente/login_cliente";
     }
 
-    @GetMapping("/produto/{id}")
-    public String produtoDetalhe(@PathVariable Long id, Model model, HttpServletRequest request) {
-        if (!isAuthenticated(request)) {
-            return "redirect:/cliente/login_cliente";
-        }
-        var produto = produtoService.buscarProdutoPorId(id);
-        model.addAttribute("produto", produto);
-        return "cliente/produto_detalhe";
-    }
 
-    @PostMapping("/adicionar_carrinho")
-    public String adicionarAoCarrinho(@RequestParam Long produtoId,
-            @RequestParam int quantidade,
-            @ModelAttribute("carrinho") Carrinho carrinho,
-            HttpServletRequest request) {
-        if (!isAuthenticated(request)) {
-            return "redirect:/cliente/login_cliente";
-        }
-        Produto produto = produtoService.buscarProdutoPorId(produtoId);
-        carrinho.adicionarProduto(produto, quantidade);
-        System.out.println("Carrinho atualizado: " + carrinho);
-        return "redirect:/cliente/home_cliente";
-    }
-
-    @GetMapping("/carrinho")
-    public String carrinhoCliente(@ModelAttribute("carrinho") Carrinho carrinho, Model model,
-            HttpServletRequest request) {
-        if (!isAuthenticated(request)) {
-            return "redirect:/cliente/login_cliente";
-        }
-        model.addAttribute("carrinho", carrinho);
-        return "cliente/carrinho";
-    }
 }

@@ -35,6 +35,10 @@ public class Carrinho {
         }
     }
 
+    public void removerProduto(Produto produto) {
+        itens.removeIf(item -> item.getProduto().equals(produto));
+        }
+
     public Double getTotal() {
         return itens.stream()
                 .mapToDouble(ItemCarrinho::getSubTotal)
