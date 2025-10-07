@@ -43,21 +43,10 @@ public class PedidoService {
         Pedido pedidoEntity = new Pedido();
         pedidoEntity.setCliente(cliente);
         pedidoEntity.setItensPedido(produtos);
-        pedidoEntity.setValorTotal(calcularValorTotal(produtos));
+        pedidoEntity.setValorTotal(carrinho.getTotal());
         pedidoEntity.setDataPedido(new Date(System.currentTimeMillis()));
         pedidoEntity.setStatusPedido(StatusPedido.PENDENTE);
         pedidoRepository.save(pedidoEntity);
-    }
-
-    private Double calcularValorTotal(List<ItemPedido> produtos) {
-        Double total = 0.0;
-        for (ItemPedido item : produtos) {
-            total += item.getProduto().getPreco() * item.getQuantidade();
-            System.out.println("Produto: " + item.getProduto().getNome() + ", Quantidade: " + item.getQuantidade()
-                    + ", Subtotal: " + (item.getProduto().getPreco() * item.getQuantidade()));
-        }
-        System.out.println("Valor total do pedido: " + total);
-        return total;
     }
 
     public List<Pedido> listarPedidosPendentes() {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
+import br.ifsul.tcc.pediu_ifoi.service.CarrinhoService;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,9 @@ public class CarrinhoController {
 
     @Autowired
     private ProdutoService produtoService;
+
+    @Autowired
+    private CarrinhoService carrinhoService;
 
     @ModelAttribute("carrinho")
     public Carrinho criarCarrinho() {
@@ -82,7 +86,17 @@ public class CarrinhoController {
         carrinho.limparCarrinho();
         return "redirect:/carrinho";
     }
-    
+
+    @PostMapping("/finalizar")
+    public String finalizarCompra(@ModelAttribute("carrinho") Carrinho carrinho, @RequestParam Long clienteId, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+
+        carrinhoService.finalizarCompra(carrinho, clienteId);
+        return "redirect:/cliente/home_cliente";
+    }
+
     private boolean isAuthenticated(HttpServletRequest request) {
         String token = null;
         if (request.getCookies() != null) {

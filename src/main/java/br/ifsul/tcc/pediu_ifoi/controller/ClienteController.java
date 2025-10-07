@@ -93,6 +93,8 @@ public class ClienteController {
             response.addCookie(cookie);
 
             
+            Long clienteId = (Long) request.getSession().getAttribute("clienteId");
+            
             System.out.println("-> Login de cliente realizado com sucesso");
             return "redirect:/cliente/home_cliente";
 
@@ -119,6 +121,7 @@ public class ClienteController {
     @GetMapping("/home_cliente")
     public String homeCliente(HttpServletRequest request, Model model) {
         System.out.println("-> Acessando home do Cliente");
+        
         if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cliente/login_cliente";
