@@ -45,4 +45,8 @@ public class Carrinho {
                 .sum(); 
     }
 
+    public void limparCarrinho() {
+        itens.clear();
+    }
+
 }

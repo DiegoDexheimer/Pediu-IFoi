@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import org.springframework.stereotype.Controller;
@@ -74,6 +73,16 @@ public class CarrinhoController {
 
         return "redirect:/carrinho";
     }
+
+    @PostMapping("/limpar")
+    public String limparCarrinho(@ModelAttribute("carrinho") Carrinho carrinho, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        carrinho.limparCarrinho();
+        return "redirect:/carrinho";
+    }
+    
     private boolean isAuthenticated(HttpServletRequest request) {
         String token = null;
         if (request.getCookies() != null) {

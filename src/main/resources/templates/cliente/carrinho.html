@@ -50,6 +50,9 @@
                     </div>
                     <div class="flex justify-end gap-4 mt-6">
                         <a th:href="@{/cliente/home_cliente}" class="bg-primary/10 text-primary font-bold py-2 px-6 rounded-lg hover:bg-primary/20 transition-colors">Voltar</a>
+                        <form th:action="@{/carrinho/limpar}" method="post" class="inline">
+                            <button type="submit" class="bg-red-500/10 text-red-500 font-bold py-2 px-6 rounded-lg hover:bg-red-500/20 transition-colors">Limpar Carrinho</button>
+                        </form>
                         <form th:action="@{/carrinho/finalizar}" method="post" class="inline">
                             <button type="submit" class="bg-primary text-white font-bold py-2 px-6 rounded-lg hover:bg-primary/90 transition-colors">Finalizar Pedido</button>
                         </form>
