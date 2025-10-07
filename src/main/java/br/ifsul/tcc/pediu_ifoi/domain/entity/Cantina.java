@@ -22,7 +22,7 @@ public class Cantina {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCantina;
 
-    @Column(name = "login", nullable = false, length = 20)
+    @Column(name = "login", nullable = false, length = 20, unique = true)
     @Size(min = 5, message = "O login deve ter no mínimo 5 caracteres")
     protected String login;
     
