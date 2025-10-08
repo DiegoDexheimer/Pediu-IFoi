@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.PedidoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Carrinho;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
-import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 import br.ifsul.tcc.pediu_ifoi.repository.ClienteRepository;
 
 @Service
@@ -24,6 +22,7 @@ public class CarrinhoService {
                 .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
         PedidoDTO pedidoDTO = new PedidoDTO(cliente, carrinho);
         pedidoService.salvarPedido(pedidoDTO);
+        carrinho.limparCarrinho();
     }
 
 }

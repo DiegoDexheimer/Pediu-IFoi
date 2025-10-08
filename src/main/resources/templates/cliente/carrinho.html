@@ -54,7 +54,12 @@
                             <button type="submit" class="bg-red-500/10 text-red-500 font-bold py-2 px-6 rounded-lg hover:bg-red-500/20 transition-colors">Limpar Carrinho</button>
                         </form>
                         <form th:action="@{/carrinho/finalizar}" method="post" class="inline">
-                            <button type="submit" class="bg-primary text-white font-bold py-2 px-6 rounded-lg hover:bg-primary/90 transition-colors">Finalizar Pedido</button>
+                            <button type="submit"
+                                    th:disabled="${#lists.isEmpty(carrinho.itens)}"
+                                    th:classappend="${#lists.isEmpty(carrinho.itens)} ? ' bg-gray-300 text-gray-600 cursor-not-allowed hover:bg-gray-300' : ' bg-primary text-white hover:bg-primary/90'"
+                                    class="font-bold py-2 px-6 rounded-lg transition-colors">
+                                Finalizar Pedido
+                            </button>
                         </form>
                     </div>
                 </div>
