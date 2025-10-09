@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import jakarta.servlet.http.HttpServletRequest;
 
 import br.ifsul.tcc.pediu_ifoi.domain.dto.PedidoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
@@ -35,5 +38,15 @@ public class PedidoController {
         System.out.println("Atualizando status do pedido ID: #" + id + " para: " + status.getDescricao());
         Pedido pedidoAtualizado = pedidoService.atualizarStatus(id, status);
         return ResponseEntity.ok(pedidoAtualizado);
+    }
+
+    @GetMapping("")
+    public String historicoPedidosCliente(HttpServletRequest request, Model model) {
+        Long clienteId = (Long) request.getSession().getAttribute("clienteId");
+        if (clienteId == null) {
+            return "redirect:/cliente/login_cliente";
+        }
+        model.addAttribute("pedidos", pedidoService.buscarPedidosPorCliente(clienteId));
+        return "cliente/pedidos";
     }
 }

@@ -60,20 +60,20 @@
 					<li class="p-6 flex flex-col gap-2" th:each="pedido : ${pedidos}">
 						<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 							<div>
-								<span class="font-bold text-primary">Pedido #<span th:text="${pedido.id}">1</span></span>
+								<span class="font-bold text-primary">Pedido #<span th:text="${pedido.idPedido}">1</span></span>
 								<span class="ml-4 text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy HH:mm')}">01/01/2024</span></span>
 							</div>
-							<span class="px-4 py-1 rounded-lg bg-primary/10 text-primary font-bold" th:text="${pedido.status}">Status</span>
+							<span class="px-4 py-1 rounded-lg bg-primary/10 text-primary font-bold" th:text="${pedido.statusPedido}">Status</span>
 						</div>
 						<div class="mt-2">
 							<span class="font-semibold">Itens:</span>
 							<ul class="list-disc ml-6">
-								<li th:each="item : ${pedido.itens}" th:text="${item.produto.nome} + ' x' + ${item.quantidade}">Produto x1</li>
+								<li th:each="item : ${pedido.itensPedido}" th:text="${item.produto.nome} + ' x' + ${item.quantidade}">Produto x1</li>
 							</ul>
 						</div>
 						<div class="flex justify-between items-center mt-2">
 							<span class="font-bold text-background-dark">Total:</span>
-							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${pedido.total}">R$ 0,00</span>
+							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${pedido.valorTotal}">R$ 0,00</span>
 						</div>
 					</li>
 				</ul>
@@ -91,7 +91,7 @@
 							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm64-84a64,64,0,0,1-64,64V64A64,64,0,0,1,192,128Z"></path></svg>
 							<span>Início</span>
 						</a>
-						<a class="flex flex-col items-center gap-1 text-sm font-medium text-primary dark:text-background-light" th:href="@{/cliente/pedidos}">
+						  <a class="flex flex-col items-center gap-1 text-sm font-medium text-primary dark:text-background-light" th:href="@{/pedidos}">
 							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M228.43,89.57l-96-64a8,8,0,0,0-8.86,0l-96,64A8,8,0,0,0,24,96V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V96A8,8,0,0,0,228.43,89.57ZM216,200H40V100.75l88-58.67,88,58.67Z"></path></svg>
 							<span>Pedidos</span>
 						</a>

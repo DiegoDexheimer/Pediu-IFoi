@@ -12,5 +12,6 @@ import br.ifsul.tcc.pediu_ifoi.domain.entity.enums.StatusPedido;
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     List<Pedido> findByStatusPedido(StatusPedido statusPedido);
+    List<Pedido> findByCliente_IdUsuario(Long idUsuario);
     
 }

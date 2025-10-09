@@ -88,7 +88,7 @@ public class ClienteController {
 
             String token = clienteService.generateToken(cliente);
             Cookie cookie = new Cookie("cliente_token", token);
-            cookie.setMaxAge(5 * 60); // 5 minutos
+            cookie.setMaxAge(5 * 60);
             cookie.setPath("/");
             response.addCookie(cookie);
 
