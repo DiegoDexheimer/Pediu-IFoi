@@ -71,13 +71,13 @@ public class CantinaController {
             return "/cantina/cadastro_cantina";
         }
 
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     @GetMapping("/login_cantina")
     public String loginCantina() {
         System.out.println("-> Acessando tela de login de Cantina");
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     @PostMapping("/login_cantina")
