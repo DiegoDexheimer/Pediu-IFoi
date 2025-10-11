@@ -1,11 +1,10 @@
 # Multi-stage build for Spring Boot application
 
 # Build stage
-FROM maven:3.9.4-openjdk-21 AS build
+FROM openjdk:21-jdk-slim AS build
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+COPY . .
+RUN ./mvnw clean package -DskipTests
 
 # Runtime stage
 FROM openjdk:21-jre-slim
