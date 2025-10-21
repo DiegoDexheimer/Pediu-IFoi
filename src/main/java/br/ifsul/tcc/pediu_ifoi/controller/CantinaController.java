@@ -170,7 +170,7 @@ public class CantinaController {
 
         try {
             System.out.println(produtoDTO);
-            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true);
+            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true, true);
             produto = produtoService.cadastrarProduto(produto);
             return "redirect:/cantina/listar_produtos";
 
