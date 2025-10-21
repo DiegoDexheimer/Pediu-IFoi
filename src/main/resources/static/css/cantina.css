@@ -215,3 +215,14 @@ a {
   color: #757575;
   border: 1px solid #bdbdbd;
 }
+
+.produto-imagem {
+    width: 176px; 
+    height: 120px; 
+    object-fit: cover; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+    display: block; 
+    margin: 0 auto; 
+}

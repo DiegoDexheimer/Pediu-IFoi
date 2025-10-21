@@ -170,10 +170,13 @@ public class CantinaController {
 
         try {
             System.out.println(produtoDTO);
-            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true, true);
-            produto = produtoService.cadastrarProduto(produto);
+            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true, true, null);
+            produto = produtoService.cadastrarProduto(produto, produtoDTO.imagem());
             return "redirect:/cantina/listar_produtos";
 
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("registrationError", e.getMessage());
+            return "cantina/cadastrar_produto";
         } catch (Exception e) {
             System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
             throw new RuntimeException("Erro ao cadastrar Cantina");
