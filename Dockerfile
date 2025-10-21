@@ -1,3 +1,8 @@
+# docker build -t pediu-ifoi .
+# docker login
+# docker tag pediu-ifoi edurigon/pediu-ifoi
+# docker push edurigon/pediu-ifoi
+
 # Importing JDK and copying required files
 FROM openjdk:21-jdk AS build
 WORKDIR /app
