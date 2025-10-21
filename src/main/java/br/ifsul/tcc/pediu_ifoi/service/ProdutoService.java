@@ -20,7 +20,7 @@ public class ProdutoService {
     }
 
     public List<Produto> listarProdutos() {
-        return produtoRepository.findAll();
+        return produtoRepository.findByAtivo(true);
     }
 
     public Produto buscarProdutoPorId(Long id) {
@@ -36,6 +36,8 @@ public class ProdutoService {
     }
 
     public void removerProduto(Long id) {
-        produtoRepository.deleteById(id);
+        Produto produto = buscarProdutoPorId(id);
+        produto.setAtivo(false);
+        produtoRepository.save(produto);
     }
 }

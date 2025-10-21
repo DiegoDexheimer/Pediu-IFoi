@@ -37,7 +37,7 @@ public class ClienteController {
     @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
         System.out.println("-> Cadastro de Cliente acessado");
-        return "/cliente/cadastro_cliente";
+        return "cliente/cadastro_cliente";
     }
 
     @PostMapping(value = "/cadastro_cliente", consumes = "application/x-www-form-urlencoded")
@@ -47,7 +47,7 @@ public class ClienteController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no cadastro");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cliente/cadastro_cliente";
+            return "cliente/cadastro_cliente";
         }
 
         try {
@@ -57,7 +57,7 @@ public class ClienteController {
         } catch (Exception e) {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
             model.addAttribute("alertError", e.getMessage());
-            return "/cliente/cadastro_cliente";
+            return "cliente/cadastro_cliente";
         }
         // adicionar confirmação de criação bem sucedida e um delay para redirecionar
         // para login
@@ -67,7 +67,7 @@ public class ClienteController {
     @GetMapping("/login_cliente")
     public String loginCliente() {
         System.out.println("-> Acessando tela de login de cliente");
-        return "/cliente/login_cliente";
+        return "cliente/login_cliente";
     }
 
     @PostMapping("/login_cliente")
@@ -79,7 +79,7 @@ public class ClienteController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no login");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cliente/login_cliente";
+            return "cliente/login_cliente";
         }
 
         try {
@@ -99,7 +99,7 @@ public class ClienteController {
         } catch (Exception e) {
             System.out.println("Erro ao logar cliente: " + e.getMessage());
             model.addAttribute("loginError", "Login ou senha inválidos");
-            return "/cliente/login_cliente";
+            return "cliente/login_cliente";
         }
     }
 
@@ -119,14 +119,14 @@ public class ClienteController {
     @GetMapping("/home_cliente")
     public String homeCliente(HttpServletRequest request, Model model) {
         System.out.println("-> Acessando home do Cliente");
-        
+
         if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cliente/login_cliente";
         }
         List<Produto> produtos = produtoService.listarProdutos();
         model.addAttribute("produtos", produtos);
-        return "/cliente/home_cliente";
+        return "cliente/home_cliente";
     }
 
     @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class,
@@ -141,8 +141,7 @@ public class ClienteController {
             errorMsg += "Dados inválidos.";
         }
         model.addAttribute("alertError", errorMsg);
-        return "/cliente/login_cliente";
+        return "cliente/login_cliente";
     }
-
 
 }
