@@ -46,7 +46,7 @@ public class CantinaController {
     @GetMapping("/cadastro_cantina")
     public String cadastrarCantina() {
         System.out.println("-> Cadastro de Cantina acessado");
-        return "/cantina/cadastro_cantina";
+        return "cantina/cadastro_cantina";
     }
 
     @PostMapping(value = "/cadastro_cantina", consumes = "application/x-www-form-urlencoded")
@@ -57,7 +57,7 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no cadastro.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/cadastro_cantina";
+            return "cantina/cadastro_cantina";
         }
 
         try {
@@ -68,16 +68,16 @@ public class CantinaController {
         } catch (Exception e) {
             System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
             model.addAttribute("registrationError", e.getMessage());
-            return "/cantina/cadastro_cantina";
+            return "cantina/cadastro_cantina";
         }
 
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     @GetMapping("/login_cantina")
     public String loginCantina() {
         System.out.println("-> Acessando tela de login de Cantina");
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     @PostMapping("/login_cantina")
@@ -89,7 +89,7 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no login.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/login_cantina";
+            return "cantina/login_cantina";
         }
 
         try {
@@ -110,7 +110,7 @@ public class CantinaController {
             model.addAttribute("loginError", "Login ou senha inválidos");
         }
 
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     private boolean isAuthenticated(HttpServletRequest request) {
@@ -139,7 +139,7 @@ public class CantinaController {
         model.addAttribute("pedidosFinalizados", pedidoService.listarPedidosFinalizados());
         System.out.println("-> Pedidos pendentes e em andamento carregados com sucesso.");
 
-        return "/cantina/home_cantina";
+        return "cantina/home_cantina";
     }
 
     @GetMapping("/cadastrar_produto")
@@ -149,7 +149,7 @@ public class CantinaController {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cantina/login_cantina";
         }
-        return "/cantina/cadastrar_produto";
+        return "cantina/cadastrar_produto";
     }
 
     @PostMapping("/cadastrar_produto")
@@ -165,12 +165,12 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Erros de validação encontrados.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/cadastrar_produto";
+            return "cantina/cadastrar_produto";
         }
 
         try {
             System.out.println(produtoDTO);
-            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true);
+            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true, true);
             produto = produtoService.cadastrarProduto(produto);
             return "redirect:/cantina/listar_produtos";
 
@@ -193,7 +193,7 @@ public class CantinaController {
             List<Produto> produtos = produtoService.listarProdutos();
             System.out.println("-> Produtos encontrados: " + produtos.size());
             model.addAttribute("produtos", produtos);
-            return "/cantina/listar_produtos";
+            return "cantina/listar_produtos";
         } catch (Exception e) {
             System.out.println("-> Erro ao listar produtos: " + e.getMessage());
             throw new RuntimeException("Erro ao listar produtos");
