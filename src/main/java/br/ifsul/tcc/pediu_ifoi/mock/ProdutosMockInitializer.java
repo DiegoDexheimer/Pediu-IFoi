@@ -29,6 +29,7 @@ public class ProdutosMockInitializer implements CommandLineRunner {
                 double preco = 5 + (20-5) * random.nextDouble();
                 produto.setPreco(Math.round(preco * 100.00) / 100.0);
                 produto.setDisponivel(true);
+                produto.setImagem("/images/produtos/default.png");
                 produtoRepository.save(produto);
             }
         }

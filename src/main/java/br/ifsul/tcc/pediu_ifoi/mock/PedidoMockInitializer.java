@@ -46,12 +46,14 @@ public class PedidoMockInitializer implements CommandLineRunner {
             produto1.setNome("Produto Mock");
             produto1.setPreco(10.0);
             produto1.setDisponivel(true);
+            produto1.setImagem("/images/produtos/default.png");
             produto1 = produtoRepository.save(produto1);
 
             Produto produto2 = new Produto();
             produto2.setNome("Produto Mock 2");
             produto2.setPreco(20.0);
             produto2.setDisponivel(true);
+            produto2.setImagem("/images/produtos/default.png");
             produto2 = produtoRepository.save(produto2);
 
             ItemPedido itemPedido1 = new ItemPedido();
@@ -88,6 +90,7 @@ public class PedidoMockInitializer implements CommandLineRunner {
             produto3.setNome("Produto Andamento");
             produto3.setPreco(15.0);
             produto3.setDisponivel(true);
+            produto3.setImagem("/images/produtos/default.png");
             produto3 = produtoRepository.save(produto3);
 
             ItemPedido itemPedido3 = new ItemPedido();
@@ -119,6 +122,7 @@ public class PedidoMockInitializer implements CommandLineRunner {
             produto4.setNome("Produto Finalizado");
             produto4.setPreco(25.0);
             produto4.setDisponivel(true);
+            produto4.setImagem("/images/produtos/default.png");
             produto4 = produtoRepository.save(produto4);
 
             ItemPedido itemPedido4 = new ItemPedido();
