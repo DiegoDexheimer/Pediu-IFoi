@@ -35,46 +35,117 @@
         </li>
       </ul>
     </div>
-    <div class="content-area">
-      <h1 class="mb-4">Cadastrar produto</h1>
-      <div th:if="${errors}" class="alert alert-danger">
-        <strong>Dados inválidos:</strong>
-        <ul>
-          <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
-        </ul>
+    <div
+      class="content-area d-flex justify-content-center align-items-center min-vh-100"
+    >
+      <div class="card p-4 shadow" style="max-width: 500px; width: 100%">
+        <h1 class="mb-4 text-center">Cadastrar produto</h1>
+        <div th:if="${errors}" class="alert alert-danger">
+          <strong>Dados inválidos:</strong>
+          <ul>
+            <li th:each="err : ${errors}" th:text="${err.defaultMessage}"></li>
+          </ul>
+        </div>
+        <form
+          action="/cantina/cadastrar_produto"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group mb-3">
+            <label for="nome">Nome do Produto</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              id="nome"
+              placeholder="Nome do Produto"
+              name="nome"
+              required
+              minlength="3"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="preco">Preço</label>
+            <input
+              type="number"
+              class="form-control form-control-sm"
+              id="preco"
+              placeholder="Preço"
+              name="preco"
+              required
+              min="0.01"
+              step="0.01"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="imagem">Imagem do Produto</label>
+            <div
+              id="drop-zone"
+              class="border border-secondary rounded p-3 text-center"
+              style="cursor: pointer; background-color: #f8f9fa"
+            >
+              Arraste e solte a imagem aqui ou clique para selecionar
+              <input
+                type="file"
+                name="imagem"
+                accept="image/*"
+                required
+                style="display: none"
+              />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+        </form>
       </div>
-      <form action="/cantina/cadastrar_produto" method="post" enctype="multipart/form-data">
-        <div class="form-group mb-3">
-          <label for="nome">Nome do Produto</label>
-          <input
-            type="text"
-            class="form-control"
-            id="nome"
-            placeholder="Nome do Produto"
-            name="nome"
-            required
-            minlength="3"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="preco">Preço</label>
-          <input
-            type="number"
-            class="form-control"
-            id="preco"
-            placeholder="Preço"
-            name="preco"
-            required
-            min="0.01"
-            step="0.01"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="imagem">Imagem do Produto</label>
-          <input type="file" name="imagem" accept="image/*" required />
-        </div>
-        <button type="submit" class="btn btn-primary">Cadastrar</button>
-      </form>
     </div>
+    <script>
+      const dropZone = document.getElementById("drop-zone");
+      const fileInput = dropZone.querySelector('input[type="file"]');
+
+      function showPreview(file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          dropZone.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.style.maxWidth = "100%";
+          img.style.maxHeight = "200px";
+          img.style.objectFit = "contain";
+          dropZone.appendChild(img);
+          dropZone.appendChild(fileInput);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      dropZone.addEventListener("click", () => fileInput.click());
+
+      fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+          showPreview(file);
+        }
+      });
+
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = "#007bff";
+        dropZone.style.backgroundColor = "#f8f9fa";
+      });
+
+      dropZone.addEventListener("dragleave", () => {
+        dropZone.style.borderColor = "#ccc";
+        dropZone.style.backgroundColor = "";
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = "#ccc";
+        dropZone.style.backgroundColor = "";
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].type.startsWith("image/")) {
+          fileInput.files = files;
+          showPreview(files[0]);
+        }
+      });
+    </script>
   </body>
 </html>
