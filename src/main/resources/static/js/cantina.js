@@ -100,10 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data && data.length > 0) {
               data.forEach(item => {
                 total += item.quantidade * item.produto.preco;
-                let foto = item.produto.foto && item.produto.foto.trim() ? item.produto.foto : '/default.png';
                 html += `
                   <div class="pedido-item-row">
-                    <img src="${foto}" alt="${item.produto.nome}" class="pedido-item-img">
+                    <img src="${item.produto.imagem}" alt="${item.produto.nome}" class="pedido-item-img">
                     <div class="pedido-item-info">
                       <div class="pedido-item-top">
                         <strong class="pedido-item-nome">${item.produto.nome}</strong>
