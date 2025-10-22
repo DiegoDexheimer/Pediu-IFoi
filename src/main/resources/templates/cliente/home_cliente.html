@@ -9,32 +9,14 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#218838", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
     <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#019863", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
-    <script>
-      function toggleDarkMode() {
-        const isDark = document.documentElement.classList.toggle('dark');
-        localStorage.setItem('darkMode', isDark);
-        updateDarkModeIcon(isDark);
-      }
-      function updateDarkModeIcon(isDark) {
-        const icon = document.getElementById('darkModeIcon');
-        if (isDark) {
-          icon.innerHTML = '<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6.995 12c0 2.761 2.246 5.007 5.005 5.007s5.005-2.246 5.005-5.007c0-2.761-2.246-5.007-5.005-5.007s-5.005 2.246-5.005 5.007zm13.705-1h-2.021a7.978 7.978 0 0 0-1.357-3.274l1.431-1.431a1 1 0 1 0-1.414-1.414l-1.431 1.431a7.978 7.978 0 0 0-3.274-1.357V2.3a1 1 0 1 0-2 0v2.021a7.978 7.978 0 0 0-3.274 1.357l-1.431-1.431a1 1 0 1 0-1.414 1.414l1.431 1.431a7.978 7.978 0 0 0-1.357 3.274H2.3a1 1 0 1 0 0 2h2.021a7.978 7.978 0 0 0 1.357 3.274l-1.431 1.431a1 1 0 1 0 1.414 1.414l1.431-1.431a7.978 7.978 0 0 0 3.274 1.357v2.021a1 1 0 1 0 2 0v-2.021a7.978 7.978 0 0 0 3.274-1.357l1.431 1.431a1 1 0 1 0 1.414-1.414l-1.431-1.431a7.978 7.978 0 0 0 1.357-3.274h2.021a1 1 0 1 0 0-2z"/></svg>';
-        } else {
-          icon.innerHTML = '<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zm0 16a7 7 0 0 1 0-14c.34 0 .67.02 1 .05A7.001 7.001 0 0 1 12 19z"/></svg>';
-        }
-      }
-      window.onload = function() {
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-        updateDarkModeIcon(isDark);
-      }
-    </script>
+    <script th:src="@{/js/darkmode.js}"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
+  <div class="absolute top-4 right-4 z-20">
+    <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
+      <span id="darkModeIcon">🌙</span>
+    </button>
+  </div>
 <div class="flex flex-col min-h-screen">
     <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-background-dark/10">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,10 +24,6 @@
           <div class="flex items-center gap-2 text-background-dark dark:text-background-light mb-4">
             <img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary" />
             <h1 class="text-2xl font-bold">Pediu-IFoi</h1>
-            <button onclick="toggleDarkMode()" class="ml-4 px-2 py-1 rounded-lg border border-primary text-primary bg-background-light dark:bg-background-dark dark:text-primary hover:bg-primary/10 transition">
-              <span id="darkModeIcon">
-              </span>
-            </button>
           </div>
           <div class="w-full max-w-md">
             <div class="relative">

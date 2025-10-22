@@ -29,18 +29,24 @@
       }
     </script>
 </head>
-<body class="bg-background-light font-display">
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="absolute top-4 right-4">
+  <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
+    <span id="darkModeIcon">🌙</span>
+  </button>
+</div>
 <div class="flex items-center justify-center min-h-screen">
-    <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-2xl">
+  <div class="w-full max-w-md p-8 space-y-8 bg-white dark:bg-background-dark rounded-xl shadow-2xl">
         <div class="text-center">
-            <h1 class="text-3xl font-bold text-gray-900">Bem-vindo ao Pediu-IFoi</h1>
-            <p class="mt-2 text-sm text-gray-600">Seu sistema de pedidos online.</p>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-background-light">Bem-vindo ao Pediu-IFoi</h1>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Seu sistema de pedidos online.</p>
         </div>
         <div class="space-y-4">
-            <a href="/cliente/login_cliente" class="w-full block px-4 py-3 text-lg font-bold text-white bg-primary rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors duration-300 text-center">Sou Cliente</a>
-            <a href="/cantina/login_cantina" class="w-full block px-4 py-3 text-lg font-bold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors duration-300 text-center">Sou Cantina</a>
+          <a href="/cliente/login_cliente" class="w-full block px-4 py-3 text-lg font-bold text-white bg-primary rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors duration-300 text-center dark:bg-primary dark:text-background-light dark:hover:bg-primary/80">Sou Cliente</a>
+          <a href="/cantina/login_cantina" class="w-full block px-4 py-3 text-lg font-bold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 transition-colors duration-300 text-center dark:bg-background-dark dark:text-background-light dark:hover:bg-background-dark/80">Sou Cantina</a>
         </div>
     </div>
 </div>
 </body>
+<script src="/js/darkmode.js"></script>
 </html>

@@ -37,6 +37,11 @@
 		</script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
+<div class="absolute top-4 right-4 z-20">
+  <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
+	<span id="darkModeIcon">🌙</span>
+  </button>
+</div>
 <div class="flex flex-col min-h-screen">
 		<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-background-dark/10">
 			<div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,10 +49,6 @@
 					<div class="flex items-center gap-2 text-background-dark dark:text-background-light mb-4">
 						<img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary" />
 						<h1 class="text-2xl font-bold">Pediu-IFoi</h1>
-						<button onclick="toggleDarkMode()" class="ml-4 px-2 py-1 rounded-lg border border-primary text-primary bg-background-light dark:bg-background-dark dark:text-primary hover:bg-primary/10 transition">
-							<span id="darkModeIcon">
-							</span>
-						</button>
 					</div>
 				</div>
 			</div>
@@ -56,14 +57,14 @@
 		<div class="max-w-3xl mx-auto pb-24">
 			<h2 class="text-3xl font-bold text-background-dark mb-8">Histórico de Pedidos</h2>
 			<div class="bg-white rounded-lg shadow-sm">
-				<ul class="divide-y divide-gray-200">
+				<ul class="divide-y divide-gray-200 dark:bg-[#2C221A] dark:text-white rounded-lg">
 					<li class="p-6 flex flex-col gap-2" th:each="pedido : ${pedidos}">
 						<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 							<div>
 								<span class="font-bold text-primary">Pedido #<span th:text="${pedido.idPedido}">1</span></span>
-								<span class="ml-4 text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy HH:mm')}">01/01/2024</span></span>
+								<span class="ml-4 text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}">01/01/2024</span></span>
 							</div>
-							<span class="px-4 py-1 rounded-lg bg-primary/10 text-primary font-bold" th:text="${pedido.statusPedido}">Status</span>
+							<span class="px-4 py-1 rounded-lg bg-primary/10 text-primary font-bold" th:text="${pedido.statusPedido.getDescricao()}">Status</span>
 						</div>
 						<div class="mt-2">
 							<span class="font-semibold">Itens:</span>
@@ -72,7 +73,7 @@
 							</ul>
 						</div>
 						<div class="flex justify-between items-center mt-2">
-							<span class="font-bold text-background-dark">Total:</span>
+							<span class="font-bold text-background-dark dark:text-white">Total:</span>
 							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${pedido.valorTotal}">R$ 0,00</span>
 						</div>
 					</li>
@@ -80,7 +81,6 @@
 				<div th:if="${#lists.isEmpty(pedidos)}" class="p-6 text-center text-gray-500">Nenhum pedido realizado ainda.</div>
 			</div>
 			<div class="flex justify-end gap-4 mt-6">
-				<a th:href="@{/cliente/home_cliente}" class="bg-primary/10 text-primary font-bold py-2 px-6 rounded-lg hover:bg-primary/20 transition-colors">Voltar</a>
 			</div>
 		</div>
 	</main>
@@ -103,5 +103,6 @@
 				</div>
 			</nav>
 </div>
+<script src="/js/darkmode.js"></script>
 </body>
 </html>
