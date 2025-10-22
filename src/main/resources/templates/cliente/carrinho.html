@@ -36,7 +36,7 @@
                             <img class="w-20 h-20 rounded-lg bg-cover bg-center flex-shrink-0" src="/static/default_produto.png" alt="Imagem do produto" />
                             <div>
                                 <h3 class="text-lg font-bold text-background-dark dark:text-background-light" th:text="${item.produto.nome}">Produto</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300" th:text="'R$ ' + ${item.produto.preco}">R$ 0,00</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-300" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</p>
                             </div>
                         </div>
                         <div class="flex items-center gap-4">
@@ -51,7 +51,7 @@
                 <div class="p-6 border-t border-gray-200 dark:border-gray-700">
                     <div class="flex justify-between text-xl font-bold text-background-dark dark:text-background-light">
                         <span>Total</span>
-                        <span th:text="'R$ ' + ${carrinho.total}">R$ 0,00</span>
+                        <span th:text="'R$ ' + ${#numbers.formatDecimal(carrinho.total, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
                     </div>
                     <div class="flex justify-end gap-4 mt-6">
                         <form th:action="@{/carrinho/limpar}" method="post" class="inline">

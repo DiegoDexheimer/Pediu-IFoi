@@ -82,7 +82,7 @@
 						</div>
 						<div class="flex justify-between items-center mt-2">
 							<span class="font-bold text-background-dark dark:text-white">Total:</span>
-							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${pedido.valorTotal}">R$ 0,00</span>
+							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${#numbers.formatDecimal(pedido.valorTotal, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
 						</div>
 					</li>
 				</ul>

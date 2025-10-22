@@ -39,7 +39,7 @@
                 <h1 class="text-2xl font-bold text-background-dark dark:text-background-light mb-2" th:text="${produto.nome}">Nome do produto</h1>
             </div>
             <div class="flex items-center justify-between mt-4 mb-6">
-                <span class="text-xl font-bold text-primary dark:text-background-light" th:text="'R$ ' + ${produto.preco}">Preço</span>
+                <span class="text-xl font-bold text-primary dark:text-background-light" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 1, 'COMMA', 2, 'POINT')}">Preço</span>
             </div>
             <form th:action="@{/carrinho/adicionar}" method="post" id="form-adicionar-produto" class="mb-4">
                 <input type="hidden" name="produtoId" th:value="${produto.id}" />
@@ -52,7 +52,7 @@
                     </div>
                     <button type="submit" id="btn-adicionar" class="flex-1 text-white bg-primary hover:bg-primary/90 font-bold rounded-lg text-base px-5 py-3 text-center transition">
                         <span>Adicionar</span>
-                        <span id="valor-total" th:text="'R$ ' + ${produto.preco}">R$ 0,00</span>
+                        <span id="valor-total" th:text="'R$ ' + ${#numbers.formatDecimal(produto.preco, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
                     </button>
                 </div>
             </form>
