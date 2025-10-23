@@ -58,34 +58,41 @@
 			<h2 class="text-3xl font-bold text-background-dark mb-8">Histórico de Pedidos</h2>
 			<div class="bg-white dark:bg-[#2C221A] rounded-lg shadow-sm border border-transparent">
 				<ul class="divide-y divide-gray-200 dark:bg-[#2C221A] dark:text-white rounded-lg">
-					<li class="p-6 flex flex-col gap-2" th:each="pedido : ${pedidos}">
-						<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-							<div>
-								<span class="font-bold text-primary">Pedido #<span th:text="${pedido.idPedido}">1</span></span>
-								<span class="ml-4 text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}">01/01/2024</span></span>
-							</div>
-														<span
-															th:classappend="
-																${pedido.statusPedido.getDescricao()} == 'Pendente' ? 'bg-yellow-100 text-yellow-800' :
-																(${pedido.statusPedido.getDescricao()} == 'Em andamento' ? 'bg-blue-100 text-blue-800' :
-																(${pedido.statusPedido.getDescricao()} == 'Finalizado' ? 'bg-green-100 text-green-800' :
-																(${pedido.statusPedido.getDescricao()} == 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-primary/10 text-primary')))
-															"
-															class="px-4 py-1 rounded-lg font-bold"
-															th:text="${pedido.statusPedido.getDescricao()}">Status</span>
-						</div>
-						<div class="mt-2">
-							<span class="font-semibold">Itens:</span>
-							<ul class="list-disc ml-6">
-								<li th:each="item : ${pedido.itensPedido}" th:text="${item.produto.nome} + ' x' + ${item.quantidade}">Produto x1</li>
-							</ul>
-						</div>
-						<div class="flex justify-between items-center mt-2">
-							<span class="font-bold text-background-dark dark:text-white">Total:</span>
-							<span class="text-xl font-bold text-primary" th:text="'R$ ' + ${#numbers.formatDecimal(pedido.valorTotal, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
-						</div>
-					</li>
-				</ul>
+  <li class="p-4 sm:p-6 flex flex-col sm:flex-row gap-3 sm:gap-4" th:each="pedido : ${pedidos}" th:object="${pedido}">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+      <div>
+        <span class="font-bold text-primary">Pedido #<span th:text="${pedido.idPedido}">1</span></span>
+        <span class="ml-2 sm:ml-4 text-xs sm:text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}">01/01/2024</span></span>
+      </div>
+      <span
+        th:classappend="
+          ${pedido.statusPedido.getDescricao()} == 'Pendente' ? 'bg-yellow-100 text-yellow-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Em andamento' ? 'bg-blue-100 text-blue-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Finalizado' ? 'bg-green-100 text-green-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-primary/10 text-primary')))
+        "
+        class="px-3 sm:px-4 py-1 rounded-lg font-bold status-pedido"
+        th:text="${pedido.statusPedido.getDescricao()}">Status</span>
+      <button
+        type="button"
+        class="btn-cancelar-pedido px-3 sm:px-4 py-1 rounded-lg font-bold bg-red-100 text-red-800 hover:bg-red-200 transition-colors"
+        th:if="${pedido.statusPedido.getDescricao()} != 'Finalizado' and ${pedido.statusPedido.getDescricao()} != 'Cancelado'"
+        th:attr="data-pedido-id=${pedido.idPedido}"
+        onclick="abrirModalCancelar(this)"
+      >Cancelar</button>
+    </div>
+    <div class="mt-2">
+      <span class="font-semibold">Itens:</span>
+      <ul class="list-disc ml-4 sm:ml-6">
+        <li class="text-xs sm:text-base" th:each="item : ${pedido.itensPedido}" th:text="${item.produto.nome} + ' x' + ${item.quantidade}">Produto x1</li>
+      </ul>
+    </div>
+    <div class="flex flex-col sm:flex-row justify-between items-center mt-2">
+      <span class="font-bold text-background-dark dark:text-white">Total:</span>
+      <span class="text-lg sm:text-xl font-bold text-primary" th:text="'R$ ' + ${#numbers.formatDecimal(pedido.valorTotal, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
+    </div>
+  </li>
+</ul>
 				<div th:if="${#lists.isEmpty(pedidos)}" class="p-6 text-center text-gray-500 dark:bg-[#2C221A] dark:text-white rounded-lg">Nenhum pedido realizado ainda.</div>
 			</div>
 			<div class="flex justify-end gap-4 mt-6">
@@ -111,6 +118,17 @@
 				</div>
 			</nav>
 </div>
+<div id="modalCancelarPedido" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white dark:bg-[#2C221A] rounded-lg shadow-lg p-8 max-w-sm w-full">
+    <h3 class="text-xl font-bold mb-4 text-background-dark dark:text-white">Cancelar Pedido</h3>
+    <p class="mb-6 text-gray-700 dark:text-gray-200">Tem certeza que deseja cancelar este pedido?</p>
+    <div class="flex justify-end gap-4">
+      <button id="btnConfirmarCancelar" type="button" class="px-4 py-2 rounded-lg font-bold bg-red-100 text-red-800 hover:bg-red-200 transition-colors">Cancelar Pedido</button>
+      <button id="btnFecharModalCancelar" type="button" class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Fechar</button>
+    </div>
+  </div>
+</div>
 <script src="/js/darkmode.js"></script>
+<script src="/js/pedidos.js"></script>
 </body>
 </html>

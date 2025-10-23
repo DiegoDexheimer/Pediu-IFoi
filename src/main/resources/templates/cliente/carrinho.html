@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -26,21 +25,21 @@
             </div>
         </div>
     </header>
-    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        <div class="max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold text-background-dark dark:text-background-light mb-8">Seu Carrinho</h2>
+    <main class="flex-grow container mx-auto px-2 sm:px-6 lg:px-8 py-6 pb-24">
+        <div class="max-w-2xl w-full mx-auto">
+            <h2 class="text-2xl sm:text-3xl font-bold text-background-dark dark:text-background-light mb-6 sm:mb-8 text-center">Seu Carrinho</h2>
             <div class="bg-white dark:bg-background-dark rounded-lg shadow-sm">
                 <ul class="divide-y divide-gray-200">
-                    <li class="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6" th:each="item : ${carrinho.itens}">
-                        <div class="flex items-center gap-4">
-                            <img class="w-20 h-20 rounded-lg bg-cover bg-center flex-shrink-0" src="/static/default_produto.png" alt="Imagem do produto" />
+                    <li class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6" th:each="item : ${carrinho.itens}">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-cover bg-center flex-shrink-0" th:src="${item.produto.imagem}" alt="Imagem do produto" />
                             <div>
-                                <h3 class="text-lg font-bold text-background-dark dark:text-background-light" th:text="${item.produto.nome}">Produto</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</p>
+                                <h3 class="text-base sm:text-lg font-bold text-background-dark dark:text-background-light" th:text="${item.produto.nome}">Produto</h3>
+                                <p class="text-xs sm:text-sm text-gray-600 dark:text-gray-300" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <span class="px-4 py-1 text-background-dark dark:text-background-light">x <span th:text="${item.quantidade}">1</span></span>
+                        <div class="flex items-center gap-3 sm:gap-4 mt-2 sm:mt-0">
+                            <span class="px-3 py-1 text-background-dark dark:text-background-light">x <span th:text="${item.quantidade}">1</span></span>
                             <form th:action="@{/carrinho/remover}" method="post" class="inline">
                                 <input type="hidden" name="produtoId" th:value="${item.produto.id}" />
                                 <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors text-xl" title="Remover">&times;</button>
@@ -48,20 +47,20 @@
                         </div>
                     </li>
                 </ul>
-                <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-                    <div class="flex justify-between text-xl font-bold text-background-dark dark:text-background-light">
+                <div class="p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex justify-between text-lg sm:text-xl font-bold text-background-dark dark:text-background-light">
                         <span>Total</span>
                         <span th:text="'R$ ' + ${#numbers.formatDecimal(carrinho.total, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
                     </div>
-                    <div class="flex justify-end gap-4 mt-6">
-                        <form th:action="@{/carrinho/limpar}" method="post" class="inline">
-                            <button type="submit" class="bg-red-500/10 text-red-500 font-bold py-2 px-6 rounded-lg hover:bg-red-500/20 transition-colors">Limpar Carrinho</button>
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-4">
+                        <form th:action="@{/carrinho/limpar}" method="post" class="inline w-full sm:w-auto">
+                            <button type="submit" class="bg-red-500/10 text-red-500 font-bold py-2 px-4 sm:px-6 rounded-lg hover:bg-red-500/20 transition-colors w-full sm:w-auto">Limpar Carrinho</button>
                         </form>
-                        <form th:action="@{/carrinho/finalizar}" method="post" class="inline">
+                        <form th:action="@{/carrinho/confirmar}" method="get" class="inline w-full sm:w-auto">
                             <button type="submit"
                                     th:disabled="${#lists.isEmpty(carrinho.itens)}"
                                     th:classappend="${#lists.isEmpty(carrinho.itens)} ? ' bg-gray-300 text-gray-600 cursor-not-allowed hover:bg-gray-300' : ' bg-primary text-white hover:bg-primary/90'"
-                                    class="font-bold py-2 px-6 rounded-lg transition-colors">
+                                    class="font-bold py-2 px-4 sm:px-6 rounded-lg transition-colors w-full sm:w-auto">
                                 Finalizar Pedido
                             </button>
                         </form>

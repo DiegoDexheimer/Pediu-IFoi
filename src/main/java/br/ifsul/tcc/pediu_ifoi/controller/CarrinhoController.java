@@ -87,6 +87,23 @@ public class CarrinhoController {
         return "redirect:/carrinho";
     }
 
+    @GetMapping("/confirmar")
+    public String confirmarPedido(@ModelAttribute("carrinho") Carrinho carrinho, Model model, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        model.addAttribute("carrinho", carrinho);
+        return "cliente/confirmar_pedido";
+    }
+
+    @PostMapping("/cancelarConfirmacao")
+    public String cancelarConfirmacao(@ModelAttribute("carrinho") Carrinho carrinho, HttpServletRequest request) {
+        if (!isAuthenticated(request)) {
+            return "redirect:/cliente/login_cliente";
+        }
+        return "redirect:/carrinho";
+    }
+
     @PostMapping("/finalizar")
     public String finalizarCompra(@ModelAttribute("carrinho") Carrinho carrinho, HttpServletRequest request) {
         if (!isAuthenticated(request)) {

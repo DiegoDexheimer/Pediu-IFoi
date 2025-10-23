@@ -49,4 +49,11 @@ public class PedidoController {
         model.addAttribute("pedidos", pedidoService.buscarPedidosPorCliente(clienteId));
         return "cliente/pedidos";
     }
+
+    @PostMapping("cancelar")
+    public ResponseEntity<Void> cancelarPedido(@RequestBody Long id) {
+        System.out.println("Cancelando pedido ID: #" + id);
+        pedidoService.atualizarStatus(id, StatusPedido.CANCELADO);
+        return ResponseEntity.noContent().build();
+    }
 }

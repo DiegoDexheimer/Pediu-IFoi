@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmar Pedido</title>
+    <link crossorigin href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Inter:wght@400;500;600;700" onload="this.rel='stylesheet'" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#019863", "background-light": "#f5f8f7", "background-dark": "#0f231c", "content-light": "#0d1c17", "content-dark": "#e6f4ef", "subtle-light": "#a3b3ad", "subtle-dark": "#5c6f68", "border-light": "#e6f4ef", "border-dark": "#2a3f37"}, fontFamily: {display: "Inter"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-content-light dark:text-content-dark min-h-screen">
+<div class="flex flex-col min-h-screen">
+    <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-border-light dark:border-border-dark">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-center h-16">
+                <div class="flex items-center justify-center gap-3 h-16">
+                    <img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary dark:text-background-light" />
+                    <h1 class="text-2xl font-bold font-display text-background-dark dark:text-background-light">Pediu-IFoi</h1>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="container mx-auto px-2 sm:px-6 lg:px-8 py-6 lg:py-12 flex-grow">
+        <div class="max-w-xl w-full mx-auto">
+            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-6 sm:mb-8 text-center">Confirmar Pedido</h2>
+            <div class="space-y-8 sm:space-y-10">
+                <section class="space-y-3 sm:space-y-4">
+                    <h3 class="text-base sm:text-lg font-semibold flex items-center">
+                        <span class="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-white mr-2 sm:mr-3">1</span> <span>Revisar Pedido</span>
+                    </h3>
+                    <div class="bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg p-3 sm:p-4 space-y-2 sm:space-y-3">
+                        <ul class="divide-y divide-gray-200 mb-2 sm:mb-4">
+                            <li class="py-2 sm:py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6" th:each="item : ${carrinho.itens}">
+                                <div class="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                                    <img class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded" th:src="${item.produto.imagem} ?: @{/images/produtos/default.png}" alt="Imagem do produto" onerror="this.onerror=null;this.src='/images/produtos/default.png'" />
+                                    <div>
+                                        <span class="font-medium" th:text="${item.produto.nome}">Produto</span>
+                                        <div class="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark" th:text="'x' + ${item.quantidade}">x1</div>
+                                    </div>
+                                </div>
+                                <div class="text-right w-full sm:w-auto">
+                                    <div class="font-semibold" th:text="'R$ ' + ${#numbers.formatDecimal(item.produto.preco * item.quantidade, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="border-t border-border-light dark:border-border-dark pt-2 sm:pt-3 space-y-1 sm:space-y-2">
+                            <div class="flex justify-between text-xs sm:text-sm">
+                                <p>Subtotal</p>
+                                <p th:text="'R$ ' + ${#numbers.formatDecimal(carrinho.total, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</p>
+                            </div>
+                            <div class="flex justify-between font-bold text-base mt-1 sm:mt-2 pt-1 sm:pt-2 border-t border-border-light dark:border-border-dark">
+                                <p>Total</p>
+                                <p th:text="'R$ ' + ${#numbers.formatDecimal(carrinho.total, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4 mt-4">
+                        <a href="/carrinho" class="py-2 px-4 sm:px-5 rounded-lg border border-gray-300 text-center">Cancelar</a>
+                        <form th:action="@{/carrinho/finalizar}" method="post" class="inline w-full sm:w-auto">
+                            <button type="submit" class="bg-primary text-white font-bold py-2 px-4 sm:px-5 rounded-lg w-full sm:w-auto">Confirmar Pedido</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>
+<div class="absolute top-4 right-4 z-20">
+    <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
+        <span id="darkModeIcon">🌙</span>
+    </button>
+</div>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>
