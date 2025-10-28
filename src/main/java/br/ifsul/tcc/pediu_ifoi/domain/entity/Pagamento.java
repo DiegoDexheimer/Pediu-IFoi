@@ -17,8 +17,6 @@ public class Pagamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Pedido
-
     private Float valor;
 
     @Enumerated(EnumType.STRING)
