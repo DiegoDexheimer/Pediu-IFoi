@@ -34,4 +34,9 @@ public class Produto {
     @Column(name = "disponivel", nullable = false)
     protected boolean isDisponivel;
 
+    @Column(name = "ativo", nullable = false)
+    private boolean ativo = true;
+
+    @Column(name = "imagem")
+    private String imagem;
 }

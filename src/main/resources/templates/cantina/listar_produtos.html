@@ -21,6 +21,9 @@
           <a class="nav-link" href="/cantina/home_cantina">Home</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/cantina/pedidos_cantina">Pedidos</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/cantina/cadastrar_produto"
             >Cadastrar produto</a
           >
@@ -43,6 +46,7 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
+            <th scope="col">Imagem</th>
             <th scope="col">Nome</th>
             <th scope="col">Preço</th>
             <th scope="col">Disponível</th>
@@ -52,6 +56,13 @@
         <tbody>
           <tr th:each="produto : ${produtos}">
             <th scope="row" th:text="${produto.id}">1</th>
+            <td style="text-align: center;">
+              <img
+                th:src="${produto.imagem != null} ? ${produto.imagem} : 'default.png'"
+                alt="Imagem do Produto"
+                class="produto-imagem"
+              />
+            </td>
             <td th:text="${produto.nome}">Produto A</td>
             <td th:text="${produto.preco}">10.00</td>
             <td th:text="${produto.isDisponivel} ? 'Sim' : 'Não'">Sim</td>

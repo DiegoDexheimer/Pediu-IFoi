@@ -20,6 +20,10 @@ public class CantinaService {
     private static final long TOKEN_VALIDITY_MS = 5 * 60 * 1000; // 5 minutos
 
     public Cantina salvarCantina(Cantina cantina) {
+        Cantina cantinaExistente = cantinaRepository.findByLogin(cantina.getLogin());
+        if (cantinaExistente != null) {
+            throw new RuntimeException("Cantina com login já cadastrado!");
+        }
         return cantinaRepository.save(cantina);
     }
 

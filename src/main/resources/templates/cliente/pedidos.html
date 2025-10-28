@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Histórico de Pedidos</title>
+		<link crossorigin href="https://fonts.gstatic.com/" rel="preconnect" />
+		<link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Montserrat:wght@400;700" onload="this.rel='stylesheet'" rel="stylesheet" />
+		<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+		<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#218838", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+		<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#019863", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+		<script>
+			function toggleDarkMode() {
+				const isDark = document.documentElement.classList.toggle('dark');
+				localStorage.setItem('darkMode', isDark);
+				updateDarkModeIcon(isDark);
+			}
+			function updateDarkModeIcon(isDark) {
+				const icon = document.getElementById('darkModeIcon');
+				if (icon) {
+					if (isDark) {
+						icon.innerHTML = '<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6.995 12c0 2.761 2.246 5.007 5.005 5.007s5.005-2.246 5.005-5.007c0-2.761-2.246-5.007-5.005-5.007s-5.005 2.246-5.005 5.007zm13.705-1h-2.021a7.978 7.978 0 0 0-1.357-3.274l1.431-1.431a1 1 0 1 0-1.414-1.414l-1.431 1.431a7.978 7.978 0 0 0-3.274-1.357V2.3a1 1 0 1 0-2 0v2.021a7.978 7.978 0 0 0-3.274 1.357l-1.431-1.431a1 1 0 1 0-1.414 1.414l1.431 1.431a7.978 7.978 0 0 0-1.357 3.274H2.3a1 1 0 1 0 0 2h2.021a7.978 7.978 0 0 0 1.357 3.274l-1.431 1.431a1 1 0 1 0 1.414 1.414l1.431-1.431a7.978 7.978 0 0 0 3.274 1.357v2.021a1 1 0 1 0 2 0v-2.021a7.978 7.978 0 0 0 3.274-1.357l1.431 1.431a1 1 0 1 0 1.414-1.414l-1.431-1.431a7.978 7.978 0 0 0 1.357-3.274h2.021a1 1 0 1 0 0-2z"/></svg>';
+					} else {
+						icon.innerHTML = '<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c4.97 0 9-4.03 9-9 0-4.97-4.03-9-9-9zm0 16a7 7 0 0 1 0-14c.34 0 .67.02 1 .05A7.001 7.001 0 0 1 12 19z"/></svg>';
+					}
+				}
+			}
+			window.onload = function() {
+				const isDark = localStorage.getItem('darkMode') === 'true';
+				if (isDark) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+				updateDarkModeIcon(isDark);
+			}
+		</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
+<div class="absolute top-4 right-4 z-20">
+  <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
+	<span id="darkModeIcon">🌙</span>
+  </button>
+</div>
+<div class="flex flex-col min-h-screen">
+		<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-background-dark/10">
+			<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="flex flex-col items-center justify-center pt-4 pb-2">
+					<div class="flex items-center gap-2 text-background-dark dark:text-background-light mb-4">
+						<img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary" />
+						<h1 class="text-2xl font-bold">Pediu-IFoi</h1>
+					</div>
+				</div>
+			</div>
+		</header>
+	<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+		<div class="max-w-3xl mx-auto pb-24">
+			<h2 class="text-3xl font-bold text-background-dark mb-8">Histórico de Pedidos</h2>
+			<div class="bg-white dark:bg-[#2C221A] rounded-lg shadow-sm border border-transparent">
+				<ul class="divide-y divide-gray-200 dark:bg-[#2C221A] dark:text-white rounded-lg">
+  <li class="p-4 sm:p-6 flex flex-col sm:flex-row gap-3 sm:gap-4" th:each="pedido : ${pedidos}" th:object="${pedido}">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+      <div>
+        <span class="font-bold text-primary">Pedido #<span th:text="${pedido.idPedido}">1</span></span>
+        <span class="ml-2 sm:ml-4 text-xs sm:text-sm text-gray-500">Realizado em <span th:text="${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}">01/01/2024</span></span>
+      </div>
+      <span
+        th:classappend="
+          ${pedido.statusPedido.getDescricao()} == 'Pendente' ? 'bg-yellow-100 text-yellow-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Em andamento' ? 'bg-blue-100 text-blue-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Finalizado' ? 'bg-green-100 text-green-800' :
+          (${pedido.statusPedido.getDescricao()} == 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-primary/10 text-primary')))
+        "
+        class="px-3 sm:px-4 py-1 rounded-lg font-bold status-pedido"
+        th:text="${pedido.statusPedido.getDescricao()}">Status</span>
+      <button
+        type="button"
+        class="btn-cancelar-pedido px-3 sm:px-4 py-1 rounded-lg font-bold bg-red-100 text-red-800 hover:bg-red-200 transition-colors"
+        th:if="${pedido.statusPedido.getDescricao()} != 'Finalizado' and ${pedido.statusPedido.getDescricao()} != 'Cancelado'"
+        th:attr="data-pedido-id=${pedido.idPedido}"
+        onclick="abrirModalCancelar(this)"
+      >Cancelar</button>
+    </div>
+    <div class="mt-2">
+      <span class="font-semibold">Itens:</span>
+      <ul class="list-disc ml-4 sm:ml-6">
+        <li class="text-xs sm:text-base" th:each="item : ${pedido.itensPedido}" th:text="${item.produto.nome} + ' x' + ${item.quantidade}">Produto x1</li>
+      </ul>
+    </div>
+    <div class="flex flex-col sm:flex-row justify-between items-center mt-2">
+      <span class="font-bold text-background-dark dark:text-white">Total:</span>
+      <span class="text-lg sm:text-xl font-bold text-primary" th:text="'R$ ' + ${#numbers.formatDecimal(pedido.valorTotal, 1, 'COMMA', 2, 'POINT')}">R$ 0,00</span>
+    </div>
+  </li>
+</ul>
+				<div th:if="${#lists.isEmpty(pedidos)}" class="p-6 text-center text-gray-500 dark:bg-[#2C221A] dark:text-white rounded-lg">Nenhum pedido realizado ainda.</div>
+			</div>
+			<div class="flex justify-end gap-4 mt-6">
+			</div>
+		</div>
+	</main>
+			<nav class="fixed bottom-0 left-0 right-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-sm border-t border-background-dark/10 z-20">
+				<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+					<div class="flex items-center justify-around h-16">
+						<a class="flex flex-col items-center gap-1 text-sm font-medium text-primary dark:text-background-light" th:href="@{/cliente/home_cliente}">
+							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm64-84a64,64,0,0,1-64,64V64A64,64,0,0,1,192,128Z"></path></svg>
+							<span>Início</span>
+						</a>
+						  <a class="flex flex-col items-center gap-1 text-sm font-medium text-primary dark:text-background-light" th:href="@{/pedidos}">
+							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M228.43,89.57l-96-64a8,8,0,0,0-8.86,0l-96,64A8,8,0,0,0,24,96V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V96A8,8,0,0,0,228.43,89.57ZM216,200H40V100.75l88-58.67,88,58.67Z"></path></svg>
+							<span>Pedidos</span>
+						</a>
+						<a class="flex flex-col items-center gap-1 text-sm font-medium text-primary dark:text-background-light" th:href="@{/carrinho}">
+							<svg class="h-6 w-6" fill="currentColor" viewBox="0 0 256 256"><path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path></svg>
+							<span>Carrinho</span>
+						</a>
+					</div>
+				</div>
+			</nav>
+</div>
+<div id="modalCancelarPedido" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden">
+  <div class="bg-white dark:bg-[#2C221A] rounded-lg shadow-lg p-8 max-w-sm w-full">
+    <h3 class="text-xl font-bold mb-4 text-background-dark dark:text-white">Cancelar Pedido</h3>
+    <p class="mb-6 text-gray-700 dark:text-gray-200">Tem certeza que deseja cancelar este pedido?</p>
+    <div class="flex justify-end gap-4">
+      <button id="btnConfirmarCancelar" type="button" class="px-4 py-2 rounded-lg font-bold bg-red-100 text-red-800 hover:bg-red-200 transition-colors">Cancelar Pedido</button>
+      <button id="btnFecharModalCancelar" type="button" class="px-4 py-2 rounded-lg font-bold bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Fechar</button>
+    </div>
+  </div>
+</div>
+<script src="/js/darkmode.js"></script>
+<script src="/js/pedidos.js"></script>
+</body>
+</html>

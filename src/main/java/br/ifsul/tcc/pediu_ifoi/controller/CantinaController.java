@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.ui.Model;
@@ -17,14 +18,16 @@ import org.springframework.ui.Model;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.CantinaDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ProdutoDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cantina;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.ItemPedido;
+import br.ifsul.tcc.pediu_ifoi.domain.entity.Pedido;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.CantinaService;
+import br.ifsul.tcc.pediu_ifoi.service.PedidoService;
 import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Controller
@@ -37,10 +40,13 @@ public class CantinaController {
     @Autowired
     private ProdutoService produtoService;
 
+    @Autowired
+    private PedidoService pedidoService;
+
     @GetMapping("/cadastro_cantina")
     public String cadastrarCantina() {
         System.out.println("-> Cadastro de Cantina acessado");
-        return "/cantina/cadastro_cantina";
+        return "cantina/cadastro_cantina";
     }
 
     @PostMapping(value = "/cadastro_cantina", consumes = "application/x-www-form-urlencoded")
@@ -51,7 +57,7 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no cadastro.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/cadastro_cantina";
+            return "cantina/cadastro_cantina";
         }
 
         try {
@@ -61,16 +67,17 @@ public class CantinaController {
             System.out.println("-> Cadastro de Cantina realizado com sucesso");
         } catch (Exception e) {
             System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
-            throw new RuntimeException("Erro ao cadastrar Cantina");
+            model.addAttribute("registrationError", e.getMessage());
+            return "cantina/cadastro_cantina";
         }
 
-        return "redirect:/";
+        return "cantina/login_cantina";
     }
 
     @GetMapping("/login_cantina")
     public String loginCantina() {
         System.out.println("-> Acessando tela de login de Cantina");
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     @PostMapping("/login_cantina")
@@ -82,7 +89,7 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Dados inválidos no login.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/login_cantina";
+            return "cantina/login_cantina";
         }
 
         try {
@@ -103,7 +110,7 @@ public class CantinaController {
             model.addAttribute("loginError", "Login ou senha inválidos");
         }
 
-        return "/cantina/login_cantina";
+        return "cantina/login_cantina";
     }
 
     private boolean isAuthenticated(HttpServletRequest request) {
@@ -120,13 +127,19 @@ public class CantinaController {
     }
 
     @GetMapping("/home_cantina")
-    public String homeCantina(HttpServletRequest request) {
+    public String homeCantina(HttpServletRequest request, Model model) {
         System.out.println("-> Acessando home da Cantina");
         if (!isAuthenticated(request)) {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cantina/login_cantina";
         }
-        return "/cantina/home_cantina";
+
+        model.addAttribute("pedidosPendentes", pedidoService.listarPedidosPendentes());
+        model.addAttribute("pedidosEmAndamento", pedidoService.listarPedidosEmAndamento());
+        model.addAttribute("pedidosFinalizados", pedidoService.listarPedidosFinalizados());
+        System.out.println("-> Pedidos pendentes e em andamento carregados com sucesso.");
+
+        return "cantina/home_cantina";
     }
 
     @GetMapping("/cadastrar_produto")
@@ -136,7 +149,7 @@ public class CantinaController {
             System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
             return "redirect:/cantina/login_cantina";
         }
-        return "/cantina/cadastrar_produto";
+        return "cantina/cadastrar_produto";
     }
 
     @PostMapping("/cadastrar_produto")
@@ -152,15 +165,18 @@ public class CantinaController {
         if (bindingResult.hasErrors()) {
             System.err.println("-> Erros de validação encontrados.");
             model.addAttribute("errors", bindingResult.getAllErrors());
-            return "/cantina/cadastrar_produto";
+            return "cantina/cadastrar_produto";
         }
 
         try {
             System.out.println(produtoDTO);
-            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true);
-            produto = produtoService.cadastrarProduto(produto);
+            Produto produto = new Produto(null, produtoDTO.nome(), produtoDTO.preco(), true, true, null);
+            produto = produtoService.cadastrarProduto(produto, produtoDTO.imagem());
             return "redirect:/cantina/listar_produtos";
 
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("registrationError", e.getMessage());
+            return "cantina/cadastrar_produto";
         } catch (Exception e) {
             System.out.println("-> Erro ao cadastrar Cantina: " + e.getMessage());
             throw new RuntimeException("Erro ao cadastrar Cantina");
@@ -180,7 +196,7 @@ public class CantinaController {
             List<Produto> produtos = produtoService.listarProdutos();
             System.out.println("-> Produtos encontrados: " + produtos.size());
             model.addAttribute("produtos", produtos);
-            return "/cantina/listar_produtos";
+            return "cantina/listar_produtos";
         } catch (Exception e) {
             System.out.println("-> Erro ao listar produtos: " + e.getMessage());
             throw new RuntimeException("Erro ao listar produtos");
@@ -246,5 +262,20 @@ public class CantinaController {
             System.out.println("-> Erro ao remover produto: " + e.getMessage());
             throw new RuntimeException("Erro ao remover produto");
         }
+    }
+
+    @GetMapping("/pedido/{id}/itens")
+    @ResponseBody
+    public List<ItemPedido> getItensPedido(@PathVariable Long id) {
+        System.out.println("-> Buscando itens do pedido " + id);
+        Pedido pedido = pedidoService.findById(id);
+        System.out.println("-> Itens encontrados: " + pedido.getItensPedido().size());
+        return pedido.getItensPedido();
+    }
+
+    @GetMapping("/pedidos_cantina")
+    public String listarTodosPedidos(Model model) {
+        model.addAttribute("pedidos", pedidoService.listarTodosPedidos());
+        return "cantina/pedidos_cantina";
     }
 }

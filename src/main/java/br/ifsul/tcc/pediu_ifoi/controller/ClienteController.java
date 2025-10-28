@@ -1,7 +1,10 @@
 package br.ifsul.tcc.pediu_ifoi.controller;
 
-import jakarta.validation.Valid;
+import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
+
 import java.util.List;
+
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -10,14 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
+
 import br.ifsul.tcc.pediu_ifoi.domain.dto.ClienteLoginDTO;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Cliente;
 import br.ifsul.tcc.pediu_ifoi.domain.entity.Produto;
 import br.ifsul.tcc.pediu_ifoi.service.ClienteService;
-import br.ifsul.tcc.pediu_ifoi.service.ProdutoService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/cliente")
@@ -28,19 +33,6 @@ public class ClienteController {
 
     @Autowired
     private ProdutoService produtoService;
-
-    private boolean isAuthenticated(HttpServletRequest request) {
-        String token = null;
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("token".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
-            }
-        }
-        return token != null && clienteService.isTokenValid(token);
-    }
 
     @GetMapping("/cadastro_cliente")
     public String cadastroCliente() {
@@ -64,7 +56,8 @@ public class ClienteController {
             System.out.println("-> Cliente cadastrado com sucesso");
         } catch (Exception e) {
             System.out.println("Erro ao salvar cliente: " + e.getMessage());
-            throw new RuntimeException("Erro ao cadastrar cliente");
+            model.addAttribute("alertError", e.getMessage());
+            return "cliente/cadastro_cliente";
         }
         return "redirect:/cliente/login_cliente";
     }
@@ -77,7 +70,7 @@ public class ClienteController {
 
     @PostMapping("/login_cliente")
     public String loginCliente(@Valid @ModelAttribute ClienteLoginDTO clienteLoginDTO, BindingResult bindingResult,
-            Model model, HttpServletResponse response) {
+            Model model, HttpServletResponse response, HttpServletRequest request) {
 
         System.out.println("-> Iniciando login de cliente");
 
@@ -92,11 +85,12 @@ public class ClienteController {
             System.out.println(cliente);
 
             String token = clienteService.generateToken(cliente);
-            Cookie cookie = new Cookie("token", token);
-            cookie.setMaxAge(5 * 60); // 5 minutos
+            Cookie cookie = new Cookie("cliente_token", token);
+            cookie.setMaxAge(5 * 60);
             cookie.setPath("/");
             response.addCookie(cookie);
 
+            request.getSession().setAttribute("clienteId", cliente.getIdUsuario());
             System.out.println("-> Login de cliente realizado com sucesso");
             return "redirect:/cliente/home_cliente";
 
@@ -105,6 +99,47 @@ public class ClienteController {
             model.addAttribute("loginError", "Login ou senha inválidos");
             return "cliente/login_cliente";
         }
+    }
+
+    private boolean isAuthenticated(HttpServletRequest request) {
+        String token = null;
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("cliente_token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        return token != null && clienteService.isTokenValid(token);
+    }
+
+    @GetMapping("/home_cliente")
+    public String homeCliente(HttpServletRequest request, Model model) {
+        System.out.println("-> Acessando home do Cliente");
+
+        if (!isAuthenticated(request)) {
+            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
+            return "redirect:/cliente/login_cliente";
+        }
+        List<Produto> produtos = produtoService.listarProdutos();
+        model.addAttribute("produtos", produtos);
+        return "cliente/home_cliente";
+    }
+
+    @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class,
+            org.springframework.beans.TypeMismatchException.class })
+    public String handleValidationException(Exception ex, Model model) {
+        String errorMsg = "Erro ao processar requisição: ";
+        if (ex instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
+            errorMsg += "Verifique se os dados estão corretos.";
+        } else if (ex instanceof org.springframework.beans.TypeMismatchException) {
+            errorMsg += "O campo está com tipo inválido.";
+        } else {
+            errorMsg += "Dados inválidos.";
+        }
+        model.addAttribute("alertError", errorMsg);
+        return "cliente/login_cliente";
     }
 
     @GetMapping("/home_cliente")

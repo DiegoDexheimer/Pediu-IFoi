@@ -25,7 +25,7 @@ public class ClienteService {
         if (existentePorLogin != null) {
             throw new RuntimeException("Já existe um cliente com este login.");
         }
-        
+
         if (cliente.getTelefone() != null && !cliente.getTelefone().isEmpty()) {
             Cliente existentePorTelefone = clienteRepository.findByTelefone(cliente.getTelefone());
             if (existentePorTelefone != null) {
@@ -53,7 +53,7 @@ public class ClienteService {
 
         return token;
     }
-    
+
     public boolean isTokenValid(String token) {
         Long expiry = tokenStore.get(token);
         if (expiry == null) {
@@ -69,5 +69,10 @@ public class ClienteService {
 
     public void removeToken(String token) {
         tokenStore.remove(token);
+    }
+
+    public Cliente buscarClientePorId(Long idCliente) {
+        return clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 }

@@ -1,4 +1,4 @@
-package br.ifsul.tcc.pediu_ifoi.domain.entity;
+package br.ifsul.tcc.pediu_ifoi.domain.entity.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

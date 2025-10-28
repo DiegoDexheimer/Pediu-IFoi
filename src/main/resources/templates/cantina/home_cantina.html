@@ -21,6 +21,9 @@
           <a class="nav-link active" href="/cantina/home_cantina">Home</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/cantina/pedidos_cantina">Pedidos</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/cantina/cadastrar_produto"
             >Cadastrar produto</a
           >
@@ -37,73 +40,164 @@
       <p>Esta é a página inicial da cantina.</p>
       <div class="container-fluid">
         <div class="row g-3">
+          <!-- Em análise -->
           <div class="col-lg-4 col-md-6">
             <div class="dashboard-card dashboard-analise">
               <div class="dashboard-header">
                 <span>Em análise</span>
-                <span class="dashboard-count">2</span>
+                <span
+                  class="dashboard-count"
+                  th:text="${pedidosPendentes.size()}"
+                  >0</span
+                >
               </div>
-              <!-- Conteúdo exemplo -->
-              <div class="dashboard-body" name="pedido" id="pedido80">
-                <div class="dashboard-order">
-                  <div class="dashboard-order-title">Pedido #80</div>
-                  <div class="dashboard-order-info">
-                    <span>Anahi</span> • <span>R$ 35,00</span>
-                  </div>
-                  <div class="dashboard-order-details">
-                    Delivery: Av. Pinheiro Machado
-                  </div>
-                  <button class="dashboard-btn">Aceitar pedido</button>
-                </div>
+              <div
+                th:if="${pedidosPendentes.empty}"
+                class="dashboard-body dashboard-empty"
+              >
+                Nenhum pedido em análise no momento.
               </div>
-              <div class="dashboard-body" name="pedido" id="pedido80">
-                <div class="dashboard-order">
-                  <div class="dashboard-order-title">Pedido #80</div>
-                  <div class="dashboard-order-info">
-                    <span>Anahi</span> • <span>R$ 35,00</span>
+              <div
+                th:each="pedido : ${pedidosPendentes}"
+                class="dashboard-body"
+                th:attr="id='pedido' + ${pedido.idPedido}"
+              >
+                <div
+                  class="dashboard-order"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
+                >
+                  <div
+                    class="dashboard-order-title"
+                    th:text="'Pedido #' + ${pedido.idPedido}"
+                  >
+                    Pedido #
                   </div>
-                  <div class="dashboard-order-details">
-                    Delivery: Av. Pinheiro Machado
+                  <div class="dashboard-order-info">
+                    <span th:text="${pedido.cliente.nome}">Cliente</span> •
+                    <span th:text="'R$ ' + ${pedido.valorTotal}">Valor</span>
                   </div>
                   <button class="dashboard-btn">Aceitar pedido</button>
                 </div>
               </div>
             </div>
           </div>
+          <!-- Em produção -->
           <div class="col-lg-4 col-md-6">
             <div class="dashboard-card dashboard-producao">
               <div class="dashboard-header">
                 <span>Em produção</span>
-                <span class="dashboard-count">1</span>
+                <span
+                  class="dashboard-count"
+                  th:text="${pedidosEmAndamento.size()}"
+                  >0</span
+                >
               </div>
-              <div class="dashboard-body" name="pedido" id="pedido79">
-                <div class="dashboard-order">
-                  <div class="dashboard-order-title">Pedido #79</div>
-                  <div class="dashboard-order-info">
-                    <span>Airton</span> • <span>R$ 27,00</span>
+              <div
+                th:if="${pedidosEmAndamento.empty}"
+                class="dashboard-body dashboard-empty"
+              >
+                Nenhum pedido em produção no momento.
+              </div>
+              <div
+                th:each="pedido : ${pedidosEmAndamento}"
+                class="dashboard-body"
+                th:attr="id='pedido' + ${pedido.idPedido}"
+              >
+                <div
+                  class="dashboard-order"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
+                >
+                  <div
+                    class="dashboard-order-title"
+                    th:text="'Pedido #' + ${pedido.idPedido}"
+                  >
+                    Pedido #
                   </div>
-                  <div class="dashboard-order-details">
-                    Delivery: Avenida Duque de Caxias
+                  <div class="dashboard-order-info">
+                    <span th:text="${pedido.cliente.nome}">Cliente</span> •
+                    <span th:text="'R$ ' + ${pedido.valorTotal}">Valor</span>
                   </div>
                   <button class="dashboard-btn">Avançar pedido</button>
                 </div>
               </div>
             </div>
           </div>
+          <!-- Prontos para entrega -->
           <div class="col-lg-4 col-md-12">
             <div class="dashboard-card dashboard-entrega">
               <div class="dashboard-header">
                 <span>Prontos para entrega</span>
-                <span class="dashboard-count">0</span>
+                <span
+                  class="dashboard-count"
+                  th:text="${pedidosFinalizados.size()}"
+                  >0</span
+                >
               </div>
-              <div class="dashboard-body dashboard-empty">
+              <div
+                th:if="${pedidosFinalizados.empty}"
+                class="dashboard-body dashboard-empty"
+              >
                 Nenhum pedido no momento.<br />
                 Receba pedidos e visualize os prontos para entrega.
+              </div>
+              <div
+                th:each="pedido : ${pedidosFinalizados}"
+                class="dashboard-body"
+                th:attr="id='pedido' + ${pedido.idPedido}"
+              >
+                <div
+                  class="dashboard-order"
+                  th:attr="data-pedido-id=${pedido.idPedido},data-pedido-data=${#dates.format(pedido.dataPedido, 'dd/MM/yyyy')}"
+                >
+                  <div
+                    class="dashboard-order-title"
+                    th:text="'Pedido #' + ${pedido.idPedido}"
+                  >
+                    Pedido #
+                  </div>
+                  <div class="dashboard-order-info">
+                    <span th:text="${pedido.cliente.nome}">Cliente</span> •
+                    <span th:text="'R$ ' + ${pedido.valorTotal}">Valor</span>
+                  </div>
+                  <button class="dashboard-btn">Finalizar entrega</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <!-- Modal de Detalhes do Pedido -->
+    <div
+      class="modal fade"
+      id="pedidoModal"
+      tabindex="-1"
+      aria-labelledby="pedidoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="pedidoModalLabel">
+              Detalhes do Pedido
+            </h5>
+            <button id="btnCancelarPedido" class="btn btn-danger btn-sm ms-2">
+              Cancelar pedido
+            </button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body" id="pedidoModalBody">
+            <!-- Conteúdo será preenchido via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/cantina.js"></script>
   </body>
 </html>
