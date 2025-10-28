@@ -114,19 +114,6 @@ public class ClienteController {
         return token != null && clienteService.isTokenValid(token);
     }
 
-    @GetMapping("/home_cliente")
-    public String homeCliente(HttpServletRequest request, Model model) {
-        System.out.println("-> Acessando home do Cliente");
-
-        if (!isAuthenticated(request)) {
-            System.out.println("-> Token inválido ou expirado. Redirecionando para login.");
-            return "redirect:/cliente/login_cliente";
-        }
-        List<Produto> produtos = produtoService.listarProdutos();
-        model.addAttribute("produtos", produtos);
-        return "cliente/home_cliente";
-    }
-
     @ExceptionHandler({ org.springframework.web.bind.MethodArgumentNotValidException.class,
             org.springframework.beans.TypeMismatchException.class })
     public String handleValidationException(Exception ex, Model model) {
