@@ -2,6 +2,7 @@
 # docker login
 # docker tag pediu-ifoi edurigon/pediu-ifoi
 # docker push edurigon/pediu-ifoi
+# docker run -p 8080:8080 edurigon/pediu-ifoi
 
 # Importing JDK and copying required files
 FROM openjdk:21-jdk AS build
