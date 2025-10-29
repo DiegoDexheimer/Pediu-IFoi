@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+        <style>
+          html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none;
+          }
+          html, body {
+            -ms-overflow-style: none; 
+            scrollbar-width: none;   
+          }
+        </style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pediu-IFoi | Home do Cliente</title>
@@ -12,7 +21,7 @@
     <script th:src="@{/js/darkmode.js}"></script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
-  <div class="absolute top-4 right-4 z-20">
+  <div class="fixed top-4 right-4 z-20">
     <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
       <span id="darkModeIcon">🌙</span>
     </button>
@@ -20,13 +29,12 @@
 <div class="flex flex-col min-h-screen">
     <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-background-dark/10">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col items-center justify-center pt-1 pb-1">
-            <div class="flex items-center gap-2 text-background-dark dark:text-background-light mb-0">
-            <!-- Usando a logo do projeto localizada em /static/images/Logo/Logo.png -->
-            <img th:src="@{/images/Logo/Logo.png}" alt="Logo Pediu-IFoi" class="h-36 w-36 object-contain" />
+        <div class="flex flex-col sm:flex-row items-center sm:justify-center pt-1 pb-1 gap-2 sm:gap-0">
+          <div class="flex items-center gap-2 text-background-dark dark:text-background-light mb-0 sm:mr-8">
+            <img th:src="@{/images/Logo/Logo.png}" alt="Logo Pediu-IFoi" class="h-20 w-20 object-contain" />
           </div>
-          <div class="w-full max-w-md">
-            <div class="relative">
+          <div class="w-full max-w-md mt-2 sm:mt-0">
+            <div class="relative w-full">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-background-dark/50 dark:text-background-light/50" fill="currentColor" viewBox="0 0 256 256">
                   <circle cx="10" cy="10" r="8" stroke="#fff" stroke-width="2" fill="none" />

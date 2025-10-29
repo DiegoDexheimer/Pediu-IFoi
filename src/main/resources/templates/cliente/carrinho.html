@@ -11,19 +11,19 @@
     <script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#019863", "background-light": "#f5f8f7", "background-dark": "#0f231c"}, fontFamily: {display: "Montserrat"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-background-light min-h-screen">
-<div class="absolute top-4 right-4 z-20">
+<div class="fixed top-4 right-4 z-20">
     <button id="darkModeToggle" onclick="toggleDarkMode()" class="px-3 py-2 rounded-full bg-primary text-white dark:bg-background-light dark:text-primary shadow hover:bg-primary/80 dark:hover:bg-background-light/80 transition-colors duration-300">
         <span id="darkModeIcon">🌙</span>
     </button>
 </div>
+<div class="flex flex-col items-center w-full mt-4 mb-2">
+    <div class="w-full flex items-start pl-4">
+        <img th:src="@{/images/Logo/Logo.png}" alt="Logo Pediu-IFoi" class="h-20 w-20 object-contain" />
+    </div>
+</div>
 <div class="flex flex-col min-h-screen">
     <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-background-dark/10">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-center gap-3 h-16">
-                <img src="/static/favicon.ico" alt="Logo Pediu-IFoi" class="h-8 w-8 text-primary dark:text-background-light" />
-                <h1 class="text-2xl font-bold text-background-dark dark:text-background-light">Pediu-IFoi</h1>
-            </div>
-        </div>
+        <!-- Logo já adicionada acima -->
     </header>
     <main class="flex-grow container mx-auto px-2 sm:px-6 lg:px-8 py-6 pb-24">
         <div class="max-w-2xl w-full mx-auto">
